@@ -84,7 +84,6 @@ export const useProductFilter = () => {
     return filter === 'all' || category === filter;
   };
 
- 
   const filteredProducts: IProduct[] = products.filter((product: IProduct) => {
     const averageRating = averageRatings[product.productId] || 0;
 

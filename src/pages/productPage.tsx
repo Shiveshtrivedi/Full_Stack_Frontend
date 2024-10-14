@@ -113,7 +113,7 @@ const ProductPage: React.FC = () => {
       dispatch(fetchReviews(product.productId));
       dispatch(getCart({ userId }));
     }
-  }, [product, dispatch,userId]);
+  }, [product, dispatch, userId]);
 
   if (loading) return <Loading />;
   if (error) return <div>{error}</div>;

@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getCart({ userId }));
-  }, [userId]);
+  }, [userId, dispatch]);
   return (
     <Container>
       <FontImport />

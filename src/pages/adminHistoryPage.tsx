@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { getCart } from '../redux/slices/cartSlice';
 import {
   clearAdminHistory,
@@ -106,10 +106,10 @@ const AdminHistoryPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const fetchProducts = () => {
+  const fetchProducts = useCallback(() => {
     dispatch(fetchProductHistory(userId));
     dispatch(getCart({ userId }));
-  };
+  }, [dispatch, userId]);
 
   const adminProductsHistory = useSelector(
     (root: RootState) => root.adminHistory.histories
