@@ -59,7 +59,7 @@ const ContactPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getCart({ userId }));
-  }, []);
+  }, [userId]);
 
   const {
     register,

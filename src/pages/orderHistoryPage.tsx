@@ -71,7 +71,7 @@ const OrderHistoryPage: React.FC = () => {
       dispatch(fetchOrdersByUserId(userid));
       dispatch(getCart({ userId }));
     }
-  }, [userId, dispatch]);
+  }, [userId, dispatch,userid]);
 
   const userOrders = orders;
 

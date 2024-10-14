@@ -59,7 +59,7 @@ const NotFoundPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getCart({ userId }));
-  }, []);
+  }, [userId]);
   return (
     <Container>
       <Heading>404</Heading>

@@ -169,7 +169,7 @@ const WishlistPage: React.FC = () => {
       dispatch(getWishlist(userid));
       dispatch(getCart({ userId }));
     }
-  }, [dispatch, userId]);
+  }, [dispatch, userId,userid]);
 
   return (
     <WishlistContainer>

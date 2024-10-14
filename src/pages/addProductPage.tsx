@@ -83,7 +83,7 @@ const AddProductPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(getCart({ userId }));
-  }, []);
+  }, [userId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
