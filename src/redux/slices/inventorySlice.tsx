@@ -1,27 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { InventoryItem, InventoryState, UpdateStockRequest } from '../../utils/type/types';
 
-interface InventoryItem {
-  productId: number;
-  productName: string;
-  stockAvailable: number;
-  stockSold: number;
-}
-
-interface InventoryState {
-  items: InventoryItem[];
-  loading: boolean;
-  error: string | null;
-}
-
-interface UpdateStockItem {
-  productId: number;
-  quantitySold: number;
-}
-
-interface UpdateStockRequest {
-  products: UpdateStockItem[];
-}
 
 const initialState: InventoryState = {
   items: [],

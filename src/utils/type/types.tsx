@@ -310,3 +310,54 @@ export interface IUpdateProductStockPayload {
   StockAvailable: number;
   StockSold: number;
 }
+
+export interface User {
+  userId: number;
+  userName: string;
+  email: string;
+  isAdmin: boolean;
+}
+
+export interface Product {
+  productId: number;
+  productName: string;
+  stock: number;
+  price: number;
+  category: string;
+}
+
+export interface DashboardState {
+  users: User[];
+  products: Product[];
+  sales: ISale[];
+  loading: boolean;
+  error: string | null;
+}
+
+export interface DashboardData {
+  users: User[];
+  products: Product[];
+  sales: ISale[];
+}
+
+export interface InventoryItem {
+  productId: number;
+  productName: string;
+  stockAvailable: number;
+  stockSold: number;
+}
+
+export interface InventoryState {
+  items: InventoryItem[];
+  loading: boolean;
+  error: string | null;
+}
+
+export interface UpdateStockItem {
+  productId: number;
+  quantitySold: number;
+}
+
+export interface UpdateStockRequest {
+  products: UpdateStockItem[];
+}

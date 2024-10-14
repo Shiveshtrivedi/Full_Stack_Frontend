@@ -1,35 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { ISale, IUpdateProductStockPayload } from '../../utils/type/types';
-
-interface User {
-  userId: number;
-  userName: string;
-  email: string;
-  isAdmin: boolean;
-}
-
-interface Product {
-  productId: number;
-  productName: string;
-  stock: number;
-  price: number;
-  category: string;
-}
-
-interface DashboardState {
-  users: User[];
-  products: Product[];
-  sales: ISale[];
-  loading: boolean;
-  error: string | null;
-}
-
-interface DashboardData {
-  users: User[];
-  products: Product[];
-  sales: ISale[];
-}
+import {
+  DashboardData,
+  DashboardState,
+  ISale,
+  IUpdateProductStockPayload,
+  Product,
+  User,
+} from '../../utils/type/types';
 
 export const fetchDashboardData = createAsyncThunk<
   DashboardData,
