@@ -117,7 +117,7 @@ const AdminHistoryPage: React.FC = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [dispatch, userId]);
+  }, [fetchProducts]);
 
   const handleRemoveProduct = (historyId: number) => {
     dispatch(deleteAdminHistory({ historyId }));
