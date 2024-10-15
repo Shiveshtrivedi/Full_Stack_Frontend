@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { AppDispatch, RootState } from '../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
 import { BsCart } from 'react-icons/bs';
-import { setSearchTerm } from '../redux/slices/searchSlice';
+// import { setSearchTerm } from '../redux/slices/searchSlice';
 import { Link } from 'react-router-dom';
 // import { CiSearch } from 'react-icons/ci';
 
@@ -48,19 +48,19 @@ const Nav = styled.nav`
   }
 `;
 
-const SearchBar = styled.input`
-  padding: 5px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  width: 100px;
-  height: 25x;
-  flex-shrink: 0;
-  font-size: 120%;
+// const SearchBar = styled.input`
+//   padding: 5px;
+//   border: 1px solid #cccccc;
+//   border-radius: 4px;
+//   width: 100px;
+//   height: 25x;
+//   flex-shrink: 0;
+//   font-size: 120%;
 
-  @media (max-width: 768px) {
-    width: 80%;
-  }
-`;
+//   @media (max-width: 768px) {
+//     width: 80%;
+//   }
+// `;
 
 const UserActions = styled.div`
   display: flex;
@@ -85,7 +85,7 @@ const StyledLink = styled(Link)`
 `;
 
 const CartIcon = styled(BsCart)`
-  font-size: 33px;
+  font-size: 34px;
   color: #333333;
   transition: color 0.3s ease;
   cursor: pointer;
@@ -100,29 +100,23 @@ const CartIcon = styled(BsCart)`
 `;
 
 const CartItems = styled.span`
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #dc3545;
-  border-radius: 50%;
-  padding: 4px 8px;
   position: absolute;
-  top: 30%;
-  right: 15%;
-  box-shadow: 0 2px 4px #00000020;
-  @media (max-width: 480px) {
-    font-size: 14px;
-    padding: 3px 7px;
-    top: 70%;
-    right: 45%;
-  }
+  top: -3px;
+  right: 0px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  min-width: 12px;
+`;
 
-  @media ((min-width: 481px) and (max-width: 768px)) {
-    font-size: 14px;
-    padding: 3px 7px;
-    top: 70%;
-    right: 47%;
-  }
+const CartContainer = styled.div`
+  position: relative;
+  display: inline-block;
 `;
 
 const DropdownContainer = styled.div`
@@ -221,7 +215,7 @@ const ImageLogo = styled.div`
 `;
 
 const Header: React.FC = () => {
-  const [searchInput, setSearchInput] = useState<string>('');
+  // const [searchInput, setSearchInput] = useState<string>('');
   const user = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   // const totalCartItems = useSelector(
@@ -234,11 +228,11 @@ const Header: React.FC = () => {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const closeDropdown = () => setIsDropdownOpen(false);
 
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(setSearchTerm(searchInput));
+    //   dispatch(setSearchTerm(searchInput));
   };
 
   return (
@@ -265,12 +259,12 @@ const Header: React.FC = () => {
               <StyledLink to="/adminLayout">Admin Dashboard</StyledLink>
             )}
             <form onSubmit={handleSearch}>
-              <SearchBar
+              {/* <SearchBar
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search..."
-              />
+              /> */}
               {/* <CiSearch
                 style={{
                   position: 'relative',
@@ -281,7 +275,7 @@ const Header: React.FC = () => {
               /> */}
             </form>
             <StyledLink to="/cart">
-              <div>
+              <CartContainer>
                 <CartIcon />
                 {items.length > 0 ? (
                   <CartItems>
@@ -293,7 +287,7 @@ const Header: React.FC = () => {
                 ) : (
                   <CartItems>0</CartItems>
                 )}
-              </div>
+              </CartContainer>
             </StyledLink>
             <DropdownContainerHover>
               <DropdownButton onClick={toggleDropdown}>

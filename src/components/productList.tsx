@@ -30,10 +30,12 @@ import Loading from './loading';
 import NetworkErrorPage from './networkError';
 import { FiMenu } from 'react-icons/fi';
 import { getCart } from '../redux/slices/cartSlice';
+import SearchBar from './searchBar';
 
 const Container = styled.div`
   display: flex;
   max-width: 100%;
+  flex-direction: column;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -336,6 +338,7 @@ const ProductList: React.FC = () => {
   const status = useSelector((state: RootState) => state.products.status);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const userId = useSelector((state: RootState) => state.auth.user.id);
+
   const handleAddToCart = useAddToCart();
   const {
     filteredProducts,
@@ -400,8 +403,18 @@ const ProductList: React.FC = () => {
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prev) => !prev);
   };
+
   return (
     <Container>
+      <SearchBar
+        categoryFilter={categoryFilter}
+        handleCategoryFilterChange={handleCategoryFilterChange}
+        priceFilter={priceFilter}
+        handlePriceFilterChange={handlePriceFilterChange}
+        ratingFilter={ratingFilter}
+        handleRatingFilterChange={handleRatingFilterChange}
+        handleResetFilters={handleResetFilter}
+      />
       <Hamburger
         onClick={toggleFilterVisibility}
         isFilterVisible={isFilterVisible}
@@ -499,7 +512,7 @@ const ProductList: React.FC = () => {
                   </ProductNameContainer>
                 </Link>
 
-                <Price>{product.price}$</Price>
+                <Price>Rs {product.price * 90} </Price>
 
                 <Star reviews={averageRatings[product.productId] || 0} />
 

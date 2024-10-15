@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { InventoryItem, InventoryState, UpdateStockRequest } from '../../utils/type/types';
-
+import {
+  InventoryItem,
+  InventoryState,
+  UpdateStockRequest,
+} from '../../utils/type/types';
 
 const initialState: InventoryState = {
   items: [],

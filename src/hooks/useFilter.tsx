@@ -17,6 +17,7 @@ export const useProductFilter = () => {
   const averageRatings = useSelector(
     (state: RootState) => state.reviews.averageRatings
   );
+  const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
   const wishlist = useSelector((state: RootState) => state.wishList.items);
   const [priceFilter, setPriceFilter] = useState<TPriceFilter>('all');
   const [ratingFilter, setRatingFilter] = useState<TRatingFilter>('all');
@@ -84,15 +85,18 @@ export const useProductFilter = () => {
     return filter === 'all' || category === filter;
   };
 
+  const isSearchMatch = (title: string, searchTerm: string): boolean => {
+    return title.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+
   const filteredProducts: IProduct[] = products.filter((product: IProduct) => {
     const averageRating = averageRatings[product.productId] || 0;
 
     return (
       isPriceMatch(product.price, priceFilter) &&
       isRatingMatch(averageRating, ratingFilter) &&
-      isCategoryMatch(product.category, categoryFilter)
-      // &&
-      // isSearchMatch(product.title, searchTerm)
+      isCategoryMatch(product.category, categoryFilter) &&
+      isSearchMatch(product.productName, searchTerm)
     );
   });
 
