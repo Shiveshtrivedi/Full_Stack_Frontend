@@ -182,7 +182,7 @@ export interface IUpdateOrderArgs {
 
 export interface IOrderState {
   orders: IOrder[];
-  orderView:IOrder|null;
+  orderView: IOrder | null;
   userId: number;
   loading: boolean;
   error: string;

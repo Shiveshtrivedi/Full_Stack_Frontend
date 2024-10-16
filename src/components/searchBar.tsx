@@ -133,9 +133,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
           value={searchTerm}
           onChange={handleSearchChange}
         />
-      <SearchButton type="submit">
-        <FaSearch />
-      </SearchButton>
+        <SearchButton type="submit">
+          <FaSearch />
+        </SearchButton>
       </SearchContainer>
 
       <FilterDropdown
@@ -176,8 +176,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <option value="4-star">4 Stars</option>
         <option value="5-star">5 Stars</option>
       </FilterDropdown>
-
-    
 
       <ResetButton type="button" onClick={handleResetFilters}>
         Reset Filters

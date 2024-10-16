@@ -46,10 +46,7 @@ export const postReview = createAsyncThunk<
   { rejectValue: string }
 >('reviews/postReview', async (review, { rejectWithValue }) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/review/addReview`,
-      review
-    );
+    const response = await axios.post(`${API_URL}/review/addReview`, review);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Failed to post review');

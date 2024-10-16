@@ -55,7 +55,6 @@ const OrderItem = styled.li`
   font-size: 16px;
 `;
 
-
 const LoadingMessage = styled.p`
   color: #777;
   font-size: 18px;
@@ -187,12 +186,12 @@ const PaymentPage: React.FC = () => {
         setCountdown((prevCountdown) => prevCountdown - 1);
       }, 1000);
 
-      return () => clearInterval(timerId); 
+      return () => clearInterval(timerId);
     } else if (countdown === 0 && !isPaymentTriggered) {
       handlePayment();
-      setIsPaymentTriggered(true); 
+      setIsPaymentTriggered(true);
     }
-  }, [countdown, isPaymentTriggered]);
+  }, [countdown, isPaymentTriggered, handlePayment]);
 
   return (
     <Container>
@@ -224,7 +223,6 @@ const PaymentPage: React.FC = () => {
             )}
           </OrderItems>
 
-          {/* <PayButton onClick={handlePayment}>Pay Now</PayButton> */}
           <TimerContainer>
             <CountdownCircle>
               {countdown > 0 ? countdown : 'Processing...'}

@@ -307,7 +307,6 @@ const Cart: React.FC = () => {
     return <div>No items in the cart</div>;
   }
 
-
   return (
     <CartContainer>
       {items?.length === 0 ||
