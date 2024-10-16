@@ -95,7 +95,6 @@ const ReviewForm: React.FC<IReviewFormProps> = ({
       userName,
       rating,
       comment,
-      // timestamp: new Date().toISOString(),
     };
     dispatch(postReview(newReview))
       .then(() => toast.success('Rating submitted successfully'))

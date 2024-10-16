@@ -3,11 +3,14 @@ import axios from 'axios';
 import {
   DashboardData,
   DashboardState,
+  IOrder,
   ISale,
   IUpdateProductStockPayload,
   Product,
   User,
 } from '../../utils/type/types';
+
+const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
 export const fetchDashboardData = createAsyncThunk<
   DashboardData,
@@ -15,19 +18,21 @@ export const fetchDashboardData = createAsyncThunk<
   { rejectValue: string }
 >('/admin/dashboard', async (_, { rejectWithValue }) => {
   try {
-    const userResponse = await axios.get<User[]>(
-      `http://localhost:5086/api/user/allUser`
-    );
+    const userResponse = await axios.get<User[]>(`${API_URL}/user/allUser`);
     const productResponse = await axios.get<Product[]>(
-      `http://localhost:5086/api/product/all/fetchProducts`
+      `${API_URL}/product/all/fetchProducts`
     );
-    const saleResponse = await axios.get<ISale[]>(
-      `http://localhost:5086/api/sales`
-    );
+    const saleResponse = await axios.get<ISale[]>(`${API_URL}/sales`);
+
+    const revenueResponse = await axios.get(`${API_URL}/revenue/total`);
+
+    const orderResponse = await axios.get<IOrder[]>(`${API_URL}/order`);
     return {
       users: userResponse.data,
       products: productResponse.data,
       sales: saleResponse.data,
+      revenue: revenueResponse.data,
+      orders: orderResponse.data,
     };
   } catch (error: any) {
     return rejectWithValue(error.response.data);
@@ -38,6 +43,8 @@ const initialState: DashboardState = {
   users: [],
   products: [],
   sales: [],
+  revenue: [],
+  orders: [],
   loading: false,
   error: null,
 };
@@ -73,6 +80,8 @@ const dashboardSlice = createSlice({
           state.users = action.payload.users;
           state.products = action.payload.products;
           state.sales = action.payload.sales;
+          state.revenue = action.payload.revenue;
+          state.orders = action.payload.orders;
           state.loading = false;
         }
       )

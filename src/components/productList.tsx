@@ -209,11 +209,17 @@ const ProductGridItem = styled.div`
   width: 27%;
   margin: 10px;
   border-radius: 10px;
+  height: 425px;
 
-  @media (max-width: 768px) {
-    width: 100%;
+  @media (min-width: 481px) and (max-width: 768px) {
+    width: 42%;
     padding: 15px;
-    margin: 5px 0;
+    margin: 5px 1%;
+  }
+  @media (max-width: 480px) {
+    width: 77%;
+    padding: 15px;
+    margin: 5px 1%;
   }
 `;
 
@@ -250,9 +256,11 @@ const ProductListItem = styled.div`
 const ImageHeartContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  // justify-content: space-between;
+  justify-content: center;
   width: 100%;
   margin-bottom: 10px;
+  position: relative;
 `;
 
 // const ImageHeartContainerList = styled.div`
@@ -271,9 +279,12 @@ const WishlistButton = styled.div<{ viewMode: string; isInWishlist: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0px 0 130px 0;
+  margin: 0px 0 130px -20px;
   font-size: 20px;
   font-weight: bold;
+  position:absolute;
+  right:7px;
+  top:10px
   width: ${(props) => (props.viewMode === 'list' ? '90px' : '50px')};
 
   transition:
@@ -284,6 +295,8 @@ const WishlistButton = styled.div<{ viewMode: string; isInWishlist: boolean }>`
     padding: 6px;
     font-size: 14px;
     margin-left: 2px;
+    right:5px;
+    top:5px;
   }
 `;
 
@@ -428,7 +441,7 @@ const ProductList: React.FC = () => {
             }
           >
             <option value="all">All Prices</option>
-            <option value="low">Low ($50)</option>
+            <option value="low">Low (i will set it don't wory)</option>
             <option value="medium">Medium ($50 - $100)</option>
             <option value="high">High (≥ $100)</option>
           </FilterDropdown>
@@ -508,11 +521,12 @@ const ProductList: React.FC = () => {
                   title={product.productDescription}
                 >
                   <ProductNameContainer data-title={product.productDescription}>
+                    {product.productName}
                     {product.productDescription}
                   </ProductNameContainer>
                 </Link>
 
-                <Price>Rs {product.price * 90} </Price>
+                <Price> {product.price.toFixed(2)} &#8377; </Price>
 
                 <Star reviews={averageRatings[product.productId] || 0} />
 
@@ -577,7 +591,7 @@ const ProductList: React.FC = () => {
                   </ProductNameContainer>
                 </Link>
 
-                <Price>${product.price}</Price>
+                <Price>{product.price} &#8377;</Price>
 
                 <Star reviews={averageRatings[product.productId] || 0} />
 

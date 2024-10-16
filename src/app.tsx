@@ -30,6 +30,7 @@ import AdminDashboard from './components/adminDashboard';
 import UserManagement from './components/userManagement';
 import ProductManagement from './components/productManagement';
 import SaleReport from './components/saleReport';
+import OrderSummary from './pages/orderSummaryPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -143,6 +144,7 @@ function App() {
             <Route path="users" element={<UserManagement />} />
             <Route path="products" element={<ProductManagement />} />
             <Route path="sales" element={<SaleReport />} />
+            <Route path="orderSummary/:orderId" element={<OrderSummary />} />
           </Route>
         </Routes>
       </main>

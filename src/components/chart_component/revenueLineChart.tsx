@@ -29,16 +29,17 @@ const CharContainer = styled.div`
   height: auto;
 `;
 
-const SaleLineChart = () => {
-  const sales = useSelector((root: RootState) => root.dashBoard.sales);
-  console.log('sales', sales);
+const RevenueLineChart = () => {
+  const revenues = useSelector((root: RootState) => root.dashBoard.revenue);
 
   const chartData = {
-    labels: sales.map((sale) => new Date(sale.startDate).toLocaleDateString()),
+    labels: revenues.map((revenue) =>
+      new Date(revenue.date).toLocaleDateString()
+    ),
     datasets: [
       {
-        label: 'Total Product Sale',
-        data: sales.map((sale) => sale.totalProductsSold),
+        label: 'Sales Revenue',
+        data: revenues.map((revenue) => revenue.totalRevenue),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
@@ -66,7 +67,7 @@ const SaleLineChart = () => {
       y: {
         title: {
           display: true,
-          text: 'Total Product Sales',
+          text: 'Total Sales Revenue',
         },
         beginAtZero: true,
       },
@@ -75,10 +76,10 @@ const SaleLineChart = () => {
 
   return (
     <CharContainer>
-      <h1>Total sale over period of time</h1>
+      <h1>Total revenue over period of time</h1>
       <Line data={chartData} options={options} />
     </CharContainer>
   );
 };
 
-export default SaleLineChart;
+export default RevenueLineChart;

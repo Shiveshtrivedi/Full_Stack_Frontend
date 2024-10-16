@@ -126,7 +126,7 @@ const ProductPage: React.FC = () => {
       </Zoom>
       <Title>{product.productName}</Title>
       <Star reviews={averageRating} />
-      <Price>{product.price}$</Price>
+      <Price>{product.price.toFixed(2)} &#8377;</Price>
       <Description>{product.productDescription}</Description>
       <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
       {product.productId && (

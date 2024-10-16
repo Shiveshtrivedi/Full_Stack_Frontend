@@ -13,11 +13,14 @@ const initialState: IWishListState = {
   error: '',
 };
 
+const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
+console.log('api url in user reive', API_URL);
+
 export const getWishlist = createAsyncThunk<IWishListItem[], number>(
   '/wishlist/items',
   async (userId: number) => {
     const response = await axios.get(
-      `http://localhost:5086/api/wishlist/${userId}/getAllItemsOfWishlist`
+      `${API_URL}/wishlist/${userId}/getAllItemsOfWishlist`
     );
     return response.data;
   }
@@ -28,7 +31,7 @@ export const addToWishlist = createAsyncThunk<
   { userId: number; product: IProduct }
 >('/wishlist/add', async ({ userId, product }) => {
   const response = await axios.post(
-    `http://localhost:5086/api/wishlist/${userId}/add/${product.productId}/addProductToWishList`,
+    `${API_URL}/wishlist/${userId}/add/${product.productId}/addProductToWishList`,
     {
       userId,
       product: {
@@ -44,7 +47,7 @@ export const removeFromWishlist = createAsyncThunk<
   { userId: number; productId: number }
 >('/wishlist/remove', async ({ userId, productId }) => {
   await axios.delete(
-    `http://localhost:5086/api/wishlist/${userId}/remove/${productId}/removeProductFromWishList`
+    `${API_URL}/wishlist/${userId}/remove/${productId}/removeProductFromWishList`
   );
 });
 

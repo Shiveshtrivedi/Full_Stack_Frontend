@@ -12,7 +12,7 @@ const WishlistContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 8px #00000050;
   max-width: 600px;
-  height: 383px;
+  height: 594px;
   margin: 0 auto;
   overflow-y: auto;
 
@@ -195,7 +195,7 @@ const WishlistPage: React.FC = () => {
               >
                 <ItemName>{item.product.productName}</ItemName>
               </ItemNameLink>
-              <ItemPrice>${item.product.price.toFixed(2)}</ItemPrice>
+              <ItemPrice>{item.product.price.toFixed(2)} &#8377;</ItemPrice>
             </ItemDetails>
             <RemoveButton
               onClick={() => {

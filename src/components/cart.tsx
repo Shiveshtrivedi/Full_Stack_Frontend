@@ -19,7 +19,7 @@ const CartContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 8px #00000050;
   max-width: 600px;
-  min-height: 60vh;
+  min-height: 600px;
   margin: 0 auto;
   overflow-y: auto;
 
@@ -307,9 +307,11 @@ const Cart: React.FC = () => {
     return <div>No items in the cart</div>;
   }
 
+
   return (
     <CartContainer>
-      {items[0]?.items?.length === 0 ? (
+      {items?.length === 0 ||
+      items.every((cartItem) => cartItem.items.length === 0) ? (
         <h1>Cart is empty</h1>
       ) : (
         <>
@@ -330,7 +332,7 @@ const Cart: React.FC = () => {
                     >
                       <ItemName>{item.productName}</ItemName>
                     </ItemNameLink>
-                    <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
+                    <ItemPrice>{item.price.toFixed(2)} &#8377;</ItemPrice>
                   </ItemDetails>
                   <QuantityButton
                     onClick={() =>
@@ -351,7 +353,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
           ))}
-          <TotalAmount>Total: ${totalAmount.toFixed(2)}</TotalAmount>
+          <TotalAmount>Total: {totalAmount.toFixed(2)} &#8377;</TotalAmount>
           <ClearCartButton
             onClick={() => {
               dispatch(clearCart({ userId }));

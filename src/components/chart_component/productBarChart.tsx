@@ -14,7 +14,7 @@ import { Bar } from 'react-chartjs-2';
 import styled from 'styled-components';
 
 const BarChartDimension = styled.div`
-  width: 30%;
+  width: 70%;
   height: 'auto';
 `;
 

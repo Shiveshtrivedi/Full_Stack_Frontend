@@ -8,12 +8,14 @@ const initialState: IAddressState = {
   error: null,
 };
 
+const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
+
 export const getAddresses = createAsyncThunk(
   'address/getAddresses',
   async (userId: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:5086/api/shippingAddress/${userId}/getAddressByUserId`
+        `${API_URL}/shippingAddress/${userId}/getAddressByUserId`
       );
       return response.data;
     } catch (error: any) {
@@ -29,7 +31,7 @@ export const postAddress = createAsyncThunk(
   async (addressData: IAddress, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        'http://localhost:5086/api/shippingAddress/addAddress',
+        `${API_URL}/shippingAddress/addAddress`,
         addressData
       );
       return response.data;
@@ -46,7 +48,7 @@ export const updateAddress = createAsyncThunk(
   async (addressData: IAddress, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://localhost:5086/api/shippingAddress/${addressData.shippingAddressID}/updateAddress`,
+        `${API_URL}/shippingAddress/${addressData.shippingAddressID}/updateAddress`,
         addressData
       );
       return response.data;

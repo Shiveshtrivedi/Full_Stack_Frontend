@@ -23,7 +23,7 @@ ChartJs.register(
 );
 
 const BarChartDimension = styled.div`
-  width: 30%;
+  width: 70%;
   height: 'auto';
 `;
 

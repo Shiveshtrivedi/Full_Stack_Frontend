@@ -3,6 +3,8 @@ import axios, { AxiosError } from 'axios';
 import { ICartItem, ICartState } from '../../utils/type/types';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
+
 const initialState: ICartState = {
   items: JSON.parse(
     localStorage.getItem(`cart_${localStorage.getItem('userId')}`) ?? '[]'
@@ -21,9 +23,7 @@ export const getCart = createAsyncThunk<
   { rejectValue: string }
 >('cart/getCart', async ({ userId }, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
-      `http://localhost:5086/api/cart/${userId}/getCartItems`
-    );
+    const response = await axios.get(`${API_URL}/cart/${userId}/getCartItems`);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -40,7 +40,7 @@ export const addToCart = createAsyncThunk<
 >('cart/add', async ({ userId, productId, quantity }, { rejectWithValue }) => {
   try {
     const response = await axios.post(
-      `http://localhost:5086/api/cart/${userId}/addCartItems`,
+      `${API_URL}/cart/${userId}/addCartItems`,
       {
         productId,
         quantity,
@@ -63,7 +63,7 @@ export const updateCartItem = createAsyncThunk<
 >('cart/updateItem', async ({ userId, items }, { rejectWithValue }) => {
   try {
     const response = await axios.put(
-      `http://localhost:5086/api/cart/${userId}/updateCartItem`,
+      `${API_URL}/cart/${userId}/updateCartItem`,
       items
     );
 
@@ -87,9 +87,7 @@ export const clearCart = createAsyncThunk<
   { rejectValue: string }
 >('cart/clearCart', async ({ userId }, { rejectWithValue }) => {
   try {
-    await axios.delete(
-      `http://localhost:5086/api/cart/clear/${userId}/deletItemsInCart`
-    );
+    await axios.delete(`${API_URL}/cart/clear/${userId}/deletItemsInCart`);
     toast.success('Cart cleared successfully');
   } catch (error) {
     const axiosError = error as AxiosError;

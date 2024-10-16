@@ -19,6 +19,7 @@ const loadRazorpayScript = (src: string) => {
 
 const Container = styled.div`
   max-width: 600px;
+  min-height: 600px;
   margin: 20px auto;
   padding: 20px;
   background-color: #f8f9fa;
@@ -28,6 +29,7 @@ const Container = styled.div`
 
 const OrderSummary = styled.div`
   margin-bottom: 20px;
+  height: 300px;
 `;
 
 const OrderTitle = styled.h2`
@@ -53,20 +55,6 @@ const OrderItem = styled.li`
   font-size: 16px;
 `;
 
-const PayButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 const LoadingMessage = styled.p`
   color: #777;
@@ -74,11 +62,46 @@ const LoadingMessage = styled.p`
   text-align: center;
 `;
 
+const TimerContainer = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+`;
+
+const CountdownCircle = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 5px solid #007bff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: #007bff;
+  margin: 0 auto;
+  animation: pulse 1s infinite;
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+`;
+
 const PaymentPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const orders = useSelector((state: RootState) => state.order.orders);
   const orderId = orders[orders.length - 1]?.razorpayOrderId;
   const [latestOrder, setLatestOrder] = useState<IOrder>();
+  const [countdown, setCountdown] = useState(5);
+  const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
   const navigate = useNavigate();
 
   const paymentMethod = useRef(null);
@@ -158,6 +181,19 @@ const PaymentPage: React.FC = () => {
     rzp.open();
   };
 
+  useEffect(() => {
+    if (countdown > 0) {
+      const timerId = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+
+      return () => clearInterval(timerId); 
+    } else if (countdown === 0 && !isPaymentTriggered) {
+      handlePayment();
+      setIsPaymentTriggered(true); 
+    }
+  }, [countdown, isPaymentTriggered]);
+
   return (
     <Container>
       {latestOrder ? (
@@ -168,7 +204,7 @@ const PaymentPage: React.FC = () => {
             {new Date(latestOrder.orderDate).toLocaleDateString()}
           </OrderDetail>
           <OrderDetail>
-            <strong>Total Amount:</strong> $
+            <strong>Total Amount:</strong> &#8377;
             {latestOrder.orderDetails
               ?.reduce((total, item) => total + item.price * item.quantity, 0)
               .toFixed(2)}
@@ -188,7 +224,12 @@ const PaymentPage: React.FC = () => {
             )}
           </OrderItems>
 
-          <PayButton onClick={handlePayment}>Pay Now</PayButton>
+          {/* <PayButton onClick={handlePayment}>Pay Now</PayButton> */}
+          <TimerContainer>
+            <CountdownCircle>
+              {countdown > 0 ? countdown : 'Processing...'}
+            </CountdownCircle>
+          </TimerContainer>
         </OrderSummary>
       ) : (
         <LoadingMessage>Loading order summary...</LoadingMessage>

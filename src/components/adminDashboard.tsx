@@ -14,6 +14,8 @@ import CategoryPieChart from './chart_component/categoryPieChart';
 import UserDemographicsPieChart from './chart_component/userDemographicsPieChart';
 import styled from 'styled-components';
 import mqtt from 'mqtt';
+import RevenueLineChart from './chart_component/revenueLineChart';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -79,12 +81,43 @@ const StyledTable = styled.table`
   }
 `;
 
+const ViewButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: #004085;
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+  }
+`;
+
 const AdminDashboard = () => {
-  const { users, products, sales, loading, error } = useSelector(
+  const { users, products, sales, orders, loading, error } = useSelector(
     (state: RootState) => state.dashBoard
   );
 
+  console.log('orders', orders);
+
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchDashboardData());
@@ -135,6 +168,10 @@ const AdminDashboard = () => {
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
 
+  const handleView = (orderId: number) => {
+    navigate(`/adminLayout/orderSummary/${orderId}`);
+  };
+
   return (
     <Container>
       <Title>Admin Dashboard</Title>
@@ -148,11 +185,16 @@ const AdminDashboard = () => {
         <SaleLineChart />
       </Section>
       <Section>
-        <CategoryPieChart />
+        <RevenueLineChart />
       </Section>
-      <Section>
-        <UserDemographicsPieChart />
-      </Section>
+      <div>
+        <Section>
+          <CategoryPieChart />
+        </Section>
+        <Section>
+          <UserDemographicsPieChart />
+        </Section>
+      </div>
       <Section>
         <h2>Total Users: {users.length}</h2>
         <StyledTable>
@@ -204,19 +246,66 @@ const AdminDashboard = () => {
         <StyledTable>
           <thead>
             <tr>
-              <th>Order Id</th>
-              <th>Total Amount</th>
+              <th>Cost Price</th>
+              <th>Selling Price</th>
+              <th>Product sold</th>
+              <th>Profit(in &#8377;)</th>
+              <th>Profit %</th>
               <th>Sale Date</th>
             </tr>
           </thead>
           <tbody>
-            {sales.map((sale, index) => (
-              <tr key={`${sale.orderId}-${sale.startDate}-${index}`}>
-                <td>{sale.orderId}</td>
-                <td>{sale.totalAmount}</td>
-                <td>{sale.startDate}</td>
-              </tr>
-            ))}
+            {sales.map((sale, index) => {
+              const formattedDate = new Date(sale.saleDate).toLocaleDateString(
+                'en-CA'
+              );
+              const profitPercentage =
+                ((sale.sellingPrice - sale.costPrice) / sale.costPrice) * 100;
+              return (
+                <tr key={`${sale.orderId}-${sale.saleDate}-${index}`}>
+                  <td>{sale.costPrice}</td>
+                  <td>{sale.sellingPrice}</td>
+                  <td>{sale.totalProductsSold}</td>
+                  <td>{sale.totalProfit}</td>
+                  <td>{profitPercentage.toFixed(2)}</td>
+                  <td>{formattedDate}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </StyledTable>
+      </Section>
+      <Section>
+        <h2>Total Order: {orders.length}</h2>
+        <StyledTable>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Customer Name</th>
+              <th>Order Date</th>
+              <th>Status</th>
+              <th>Order Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order, index) => {
+              const formattedDate = new Date(
+                order.orderDate
+              ).toLocaleDateString('en-CA');
+              return (
+                <tr key={`${order.orderId}-${order.orderDate}-${index}`}>
+                  <td>{order.orderId}</td>
+                  <td>{order.userName}</td>
+                  <td>{formattedDate}</td>
+                  <td>{order.status}</td>
+                  <td>
+                    <ViewButton onClick={() => handleView(order.orderId ?? 0)}>
+                      view
+                    </ViewButton>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </StyledTable>
       </Section>

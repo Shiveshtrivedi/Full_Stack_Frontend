@@ -21,9 +21,7 @@ const API_URL = process.env.REACT_APP_USER_API_URL;
 export const fetchProducts = createAsyncThunk<IProduct[]>(
   'products/fetchProducts',
   async () => {
-    const response = await axios.get(
-      `http://localhost:5086/api/product/all/fetchProducts`
-    );
+    const response = await axios.get(`${API_URL}/product/all/fetchProducts`);
     return response.data;
   }
 );
@@ -35,7 +33,7 @@ export const fetchProductsByUserId = createAsyncThunk<
 >('products/fetchProductsByUserId', async (userId, { rejectWithValue }) => {
   try {
     const response = await axios.get(
-      `http://localhost:5086/api/product/user/${userId}/getProductByUserIdForHistory`
+      `${API_URL}/product/user/${userId}/getProductByUserIdForHistory`
     );
     return response.data;
   } catch (error: any) {
@@ -50,7 +48,7 @@ export const addProduct = createAsyncThunk<
   { newProduct: IProductWithoutId; userId: number }
 >('products/addProduct', async ({ newProduct, userId }) => {
   const response = await axios.post(
-    `http://localhost:5086/api/product/${userId}/addProductByUserId`,
+    `${API_URL}/product/${userId}/addProductByUserId`,
     newProduct
   );
 
@@ -63,9 +61,7 @@ export const deleteProduct = createAsyncThunk<
   { rejectValue: string }
 >('products/deleteProduct', async (productId, { rejectWithValue }) => {
   try {
-    await axios.delete(
-      `http://localhost:5086/api/product/${productId}/deleteProduct`
-    );
+    await axios.delete(`${API_URL}/product/${productId}/deleteProduct`);
   } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Failed to delete product');
   }
@@ -126,13 +122,6 @@ const productSlice = createSlice({
         (product) => product.productId !== action.payload
       );
       state.adminProductsHistory = updatedHistory;
-    },
-
-    clearHistory() {
-      // if (state.id) {
-      //   state.adminProductsHistory = [];
-      //   saveAdminHistoryToCookies(state.id, []);
-      // }
     },
 
     resetFilter(state) {
@@ -234,11 +223,7 @@ const productSlice = createSlice({
   },
 });
 
-export const {
-  addProductToHistory,
-  removeProductFromHistory,
-  clearHistory,
-  resetFilter,
-} = productSlice.actions;
+export const { addProductToHistory, removeProductFromHistory, resetFilter } =
+  productSlice.actions;
 
 export default productSlice.reducer;

@@ -151,13 +151,14 @@ export interface IOrderDetail {
 }
 
 export interface IOrder {
-  orderId?: number;
+  orderId: number;
   status: string;
   orderDate: string;
   paymentMethod: string;
   orderDetails: IOrderDetail[];
   razorpayOrderId: string;
   transctionId?: string;
+  userName: string;
 }
 
 export interface ICreateOrderRequest {
@@ -181,6 +182,7 @@ export interface IUpdateOrderArgs {
 
 export interface IOrderState {
   orders: IOrder[];
+  orderView:IOrder|null;
   userId: number;
   loading: boolean;
   error: string;
@@ -261,10 +263,14 @@ export interface IAddressState {
 export interface ISale {
   saleId: number;
   orderId: number;
-  startDate: string;
+  saleDate: string;
   endDate: string;
   totalAmount: number;
   userName: string;
+  totalProductsSold: number;
+  costPrice: number;
+  sellingPrice: number;
+  totalProfit: number;
 }
 
 export interface IAdminHistory {
@@ -326,10 +332,17 @@ export interface Product {
   category: string;
 }
 
+export interface Revenue {
+  date: string;
+  totalRevenue: number;
+}
+
 export interface DashboardState {
   users: User[];
   products: Product[];
   sales: ISale[];
+  orders: IOrder[];
+  revenue: Revenue[];
   loading: boolean;
   error: string | null;
 }
@@ -338,6 +351,8 @@ export interface DashboardData {
   users: User[];
   products: Product[];
   sales: ISale[];
+  revenue: Revenue[];
+  orders: IOrder[];
 }
 
 export interface InventoryItem {

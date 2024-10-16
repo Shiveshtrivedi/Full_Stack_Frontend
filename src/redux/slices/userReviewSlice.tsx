@@ -9,7 +9,6 @@ const initialState: IReviewsState = {
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
-console.log('api url in user reive', API_URL);
 
 export const fetchAllReviews = createAsyncThunk<
   IReview[],
@@ -17,9 +16,7 @@ export const fetchAllReviews = createAsyncThunk<
   { rejectValue: string }
 >('reviews/fetchAllReviews', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
-      `http://localhost:5086/api/review/getAllReview`
-    );
+    const response = await axios.get(`${API_URL}/review/getAllReview`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -35,7 +32,7 @@ export const fetchReviews = createAsyncThunk<
 >('reviews/fetchReviews', async (productId, { rejectWithValue }) => {
   try {
     const response = await axios.get(
-      `http://localhost:5086/api/review/${productId}/getReviewByProductId`
+      `${API_URL}/review/${productId}/getReviewByProductId`
     );
     return response.data;
   } catch (error: any) {
@@ -50,7 +47,7 @@ export const postReview = createAsyncThunk<
 >('reviews/postReview', async (review, { rejectWithValue }) => {
   try {
     const response = await axios.post(
-      `http://localhost:5086/api/review/addReview`,
+      `${API_URL}/review/addReview`,
       review
     );
     return response.data;
