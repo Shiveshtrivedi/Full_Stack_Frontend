@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch, RootState } from '../redux/store';
@@ -115,14 +115,13 @@ const PaymentPage: React.FC = () => {
     }
   }, [orders]);
 
-  const handlePayment = () => {
+  const handlePayment = useCallback(() => {
     if (!latestOrder) return;
 
     const totalAmount = latestOrder.orderDetails?.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
-
     const options = {
       key: process.env.REACT_APP_RAZORPAY_CLIENT_ID,
       amount: totalAmount * 100,
@@ -178,7 +177,7 @@ const PaymentPage: React.FC = () => {
     });
 
     rzp.open();
-  };
+  }, [latestOrder, orderId, dispatch, navigate]);
 
   useEffect(() => {
     if (countdown > 0) {
