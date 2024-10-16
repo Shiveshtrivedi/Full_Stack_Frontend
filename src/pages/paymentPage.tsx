@@ -177,7 +177,7 @@ const PaymentPage: React.FC = () => {
     });
 
     rzp.open();
-  }, [latestOrder, orderId, dispatch, navigate]);
+  }, [latestOrder, orderId, dispatch, navigate, orders]);
 
   useEffect(() => {
     if (countdown > 0) {
