@@ -62,7 +62,7 @@ const Button = styled.button<{ viewMode: string }>`
   font-size: 14px;
   font-weight: bold;
   margin-top: 10px;
-  
+
   &:hover {
     background-color: #45a049;
   }
@@ -108,8 +108,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <ProductCardContainer>
-      <Link to={`/products/${product.productId}`} title={product.productDescription}>
-        <Image src={product.image} alt={product.productDescription} viewMode={viewMode} />
+      <Link
+        to={`/products/${product.productId}`}
+        title={product.productDescription}
+      >
+        <Image
+          src={product.image}
+          alt={product.productDescription}
+          viewMode={viewMode}
+        />
       </Link>
       <WishlistButton
         isInWishlist={wishlistStatus[product.productId] || false}
@@ -122,7 +129,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </WishlistButton>
 
-      <Link to={`/products/${product.productId}`} title={product.productDescription}>
+      <Link
+        to={`/products/${product.productId}`}
+        title={product.productDescription}
+      >
         <ProductNameContainer>{product.productName}</ProductNameContainer>
       </Link>
 
@@ -134,7 +144,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </Button>
 
       {isAdmin && (
-        <DeleteButton onClick={() => onDelete(product.productId)} viewMode={viewMode}>
+        <DeleteButton
+          onClick={() => onDelete(product.productId)}
+          viewMode={viewMode}
+        >
           Delete
         </DeleteButton>
       )}

@@ -9,7 +9,7 @@ import {
 } from '../utils/type/types';
 import { useLocation } from 'react-router-dom';
 
-export const useProductFilter = (initialViewMode: 'grid' | 'list' = 'grid') => {
+export const useProductFilter = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const category = query.get('category');

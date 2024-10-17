@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import  { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { ICartItem, ICartState } from '../../utils/type/types';
 import { toast } from 'react-toastify';
 import { api } from './authSlice';
