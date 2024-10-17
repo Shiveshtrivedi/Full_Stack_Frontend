@@ -18,6 +18,8 @@ interface SearchBarProps {
   handlePriceFilterChange: (filter: TPriceFilter) => void;
   handleRatingFilterChange: (filter: TRatingFilter) => void;
   handleResetFilters: () => void;
+  viewMode: 'grid' | 'list';
+  handleToggleViewMode: () => void;
 }
 
 const SearchForm = styled.form`
@@ -53,15 +55,6 @@ const SearchContainer = styled.div`
   }
 `;
 
-const FilterDropdown = styled.select`
-  border: none;
-  background: transparent;
-  font-size: 14px;
-  margin-right: 10px;
-  outline: none;
-  font-family: inherit;
-`;
-
 const SearchInput = styled.input`
   flex-grow: 1;
   border: none;
@@ -83,13 +76,26 @@ const SearchButton = styled.button`
   font-size: 18px;
   padding: 10px;
   color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   @media (max-width: 768px) {
     width: 100%;
     justify-content: center;
+  }
+`;
+
+const FilterDropdown = styled.select`
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  margin-right: 10px;
+  outline: none;
+  font-family: inherit;
+  margin: 0;
+  padding: 0;
+  width: 15%;
+
+  @media (max-width: 480px) {
+    width: 35%;
   }
 `;
 
@@ -107,6 +113,10 @@ const ResetButton = styled.button`
   }
 `;
 
+const ViewModeButton = styled(ResetButton)`
+  margin-left: 2px;
+`;
+
 const SearchBar: React.FC<SearchBarProps> = ({
   categoryFilter,
   handleCategoryFilterChange,
@@ -114,8 +124,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handlePriceFilterChange,
   ratingFilter,
   handleRatingFilterChange,
-
   handleResetFilters,
+  viewMode,
+  handleToggleViewMode,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const searchTerm = useSelector((state: RootState) => selectSearchTerm(state));
@@ -124,8 +135,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
     dispatch(setSearchTerm(event.target.value));
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
+
   return (
-    <SearchForm>
+    <SearchForm onSubmit={handleSubmit}>
       <SearchContainer>
         <SearchInput
           type="text"
@@ -133,10 +148,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <SearchButton type="submit">
+        <SearchButton type="button">
           <FaSearch />
         </SearchButton>
       </SearchContainer>
+
+      <FilterDropdown
+        value={priceFilter}
+        onChange={(e) =>
+          handlePriceFilterChange(e.target.value as TPriceFilter)
+        }
+      >
+        <option value="all">All Prices</option>
+        <option value="low">Low (≤1500 &#8377;)</option>
+        <option value="medium">Medium (1501 - 4999 &#8377;)</option>
+        <option value="high">High (≥ 5000 &#8377;)</option>
+      </FilterDropdown>
 
       <FilterDropdown
         value={categoryFilter}
@@ -152,34 +179,29 @@ const SearchBar: React.FC<SearchBarProps> = ({
       </FilterDropdown>
 
       <FilterDropdown
-        value={priceFilter}
-        onChange={(e) =>
-          handlePriceFilterChange(e.target.value as TPriceFilter)
-        }
-      >
-        <option value="all">All Prices</option>
-        <option value="low">Low ($50)</option>
-        <option value="medium">Medium ($50 - $100)</option>
-        <option value="high">High (≥ $100)</option>
-      </FilterDropdown>
-
-      <FilterDropdown
         value={ratingFilter}
         onChange={(e) =>
           handleRatingFilterChange(e.target.value as TRatingFilter)
         }
       >
         <option value="all">All Ratings</option>
-        <option value="1-star">1 Star</option>
-        <option value="2-star">2 Stars</option>
-        <option value="3-star">3 Stars</option>
-        <option value="4-star">4 Stars</option>
-        <option value="5-star">5 Stars</option>
+        <option value="1">1 Star</option>
+        <option value="2">2 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="5">5 Stars</option>
       </FilterDropdown>
 
-      <ResetButton type="button" onClick={handleResetFilters}>
+      <ResetButton
+        type="button"
+        onClick={handleResetFilters}
+        aria-label="Reset Filters"
+      >
         Reset Filters
       </ResetButton>
+      <ViewModeButton type="button" onClick={handleToggleViewMode}>
+        {viewMode === 'grid' ? 'List View' : 'Grid View'}
+      </ViewModeButton>
     </SearchForm>
   );
 };

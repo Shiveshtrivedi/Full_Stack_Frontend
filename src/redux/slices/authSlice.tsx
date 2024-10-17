@@ -29,13 +29,26 @@ const initialState: IAuthState = {
   userEmail: storedUser ? JSON.parse(storedUser).email : '',
 };
 
+export const api = axios.create({
+  baseURL: API_URL,
+});
+
+// Interceptor to add the Authorization header
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const login = createAsyncThunk<
   IAuthResponse,
   ICredentials,
   { rejectValue: string }
 >('auth/login', async (credentials, { rejectWithValue }) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${API_URL}/auth/login`,
       {
         email: credentials.email,
@@ -133,6 +146,7 @@ const authSlice = createSlice({
           state.error = '';
           state.userEmail = action.payload.user.email;
           state.isAdmin = action.payload.user.isAdmin ?? false;
+          console.log('token', state.token);
         }
       )
       .addCase(

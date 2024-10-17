@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import  { AxiosError } from 'axios';
 import { ICartItem, ICartState } from '../../utils/type/types';
 import { toast } from 'react-toastify';
+import { api } from './authSlice';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
@@ -23,7 +24,7 @@ export const getCart = createAsyncThunk<
   { rejectValue: string }
 >('cart/getCart', async ({ userId }, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_URL}/cart/${userId}/getCartItems`);
+    const response = await api.get(`${API_URL}/cart/${userId}/getCartItems`);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -39,13 +40,10 @@ export const addToCart = createAsyncThunk<
   { rejectValue: string }
 >('cart/add', async ({ userId, productId, quantity }, { rejectWithValue }) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/cart/${userId}/addCartItems`,
-      {
-        productId,
-        quantity,
-      }
-    );
+    const response = await api.post(`${API_URL}/cart/${userId}/addCartItems`, {
+      productId,
+      quantity,
+    });
 
     return response.data;
   } catch (error) {
@@ -62,7 +60,7 @@ export const updateCartItem = createAsyncThunk<
   { rejectValue: string }
 >('cart/updateItem', async ({ userId, items }, { rejectWithValue }) => {
   try {
-    const response = await axios.put(
+    const response = await api.put(
       `${API_URL}/cart/${userId}/updateCartItem`,
       items
     );
@@ -87,7 +85,7 @@ export const clearCart = createAsyncThunk<
   { rejectValue: string }
 >('cart/clearCart', async ({ userId }, { rejectWithValue }) => {
   try {
-    await axios.delete(`${API_URL}/cart/clear/${userId}/deletItemsInCart`);
+    await api.delete(`${API_URL}/cart/clear/${userId}/deletItemsInCart`);
     toast.success('Cart cleared successfully');
   } catch (error) {
     const axiosError = error as AxiosError;

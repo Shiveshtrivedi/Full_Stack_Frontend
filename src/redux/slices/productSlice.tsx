@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import {
   EStatus,
   IProduct,
   IProductState,
   IProductWithoutId,
 } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const initialState: IProductState = {
   products: [],
@@ -21,7 +21,7 @@ const API_URL = process.env.REACT_APP_USER_API_URL;
 export const fetchProducts = createAsyncThunk<IProduct[]>(
   'products/fetchProducts',
   async () => {
-    const response = await axios.get(`${API_URL}/product/all/fetchProducts`);
+    const response = await api.get(`${API_URL}/product/all/fetchProducts`);
     return response.data;
   }
 );
@@ -32,7 +32,7 @@ export const fetchProductsByUserId = createAsyncThunk<
   { rejectValue: string }
 >('products/fetchProductsByUserId', async (userId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/product/user/${userId}/getProductByUserIdForHistory`
     );
     return response.data;
@@ -47,7 +47,7 @@ export const addProduct = createAsyncThunk<
   IProduct,
   { newProduct: IProductWithoutId; userId: number }
 >('products/addProduct', async ({ newProduct, userId }) => {
-  const response = await axios.post(
+  const response = await api.post(
     `${API_URL}/product/${userId}/addProductByUserId`,
     newProduct
   );
@@ -61,7 +61,7 @@ export const deleteProduct = createAsyncThunk<
   { rejectValue: string }
 >('products/deleteProduct', async (productId, { rejectWithValue }) => {
   try {
-    await axios.delete(`${API_URL}/product/${productId}/deleteProduct`);
+    await api.delete(`${API_URL}/product/${productId}/deleteProduct`);
   } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Failed to delete product');
   }
@@ -77,7 +77,7 @@ export const updateProduct = createAsyncThunk(
     updatedProduct: IProduct;
   }) => {
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `${API_URL}/product/${productId}/updateProduct`,
         updatedProduct,
         {
@@ -99,7 +99,7 @@ export const fetchProductsByCategory = createAsyncThunk<
   { rejectValue: string }
 >('products/fetchProductsByCategory', async (category, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${process.env.REACT_APP_PRODUCT_API_URL}/${category}`
     );
     return response.data;

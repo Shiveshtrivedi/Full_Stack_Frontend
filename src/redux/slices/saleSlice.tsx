@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { ISale } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
@@ -12,7 +12,7 @@ export const fetchSalesReport = createAsyncThunk<
   'sales/fetchSalesReport',
   async ({ startDate, endDate }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `${API_URL}/sales/daterange?startDate=${startDate}&endDate=${endDate}`,
         {
           params: { startDate, endDate },

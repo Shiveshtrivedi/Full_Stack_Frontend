@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IReview, IReviewsState } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const initialState: IReviewsState = {
   reviews: {},
@@ -16,7 +16,7 @@ export const fetchAllReviews = createAsyncThunk<
   { rejectValue: string }
 >('reviews/fetchAllReviews', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_URL}/review/getAllReview`);
+    const response = await api.get(`${API_URL}/review/getAllReview`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -31,7 +31,7 @@ export const fetchReviews = createAsyncThunk<
   { rejectValue: string }
 >('reviews/fetchReviews', async (productId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/review/${productId}/getReviewByProductId`
     );
     return response.data;
@@ -46,7 +46,7 @@ export const postReview = createAsyncThunk<
   { rejectValue: string }
 >('reviews/postReview', async (review, { rejectWithValue }) => {
   try {
-    const response = await axios.post(`${API_URL}/review/addReview`, review);
+    const response = await api.post(`${API_URL}/review/addReview`, review);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Failed to post review');

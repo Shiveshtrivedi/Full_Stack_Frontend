@@ -4,8 +4,8 @@ import {
   IWishListItem,
   IWishListState,
 } from '../../utils/type/types';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import { api } from './authSlice';
 
 const initialState: IWishListState = {
   items: [] as IWishListItem[],
@@ -19,7 +19,7 @@ console.log('api url in user reive', API_URL);
 export const getWishlist = createAsyncThunk<IWishListItem[], number>(
   '/wishlist/items',
   async (userId: number) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/wishlist/${userId}/getAllItemsOfWishlist`
     );
     return response.data;
@@ -30,7 +30,7 @@ export const addToWishlist = createAsyncThunk<
   IWishListItem,
   { userId: number; product: IProduct }
 >('/wishlist/add', async ({ userId, product }) => {
-  const response = await axios.post(
+  const response = await api.post(
     `${API_URL}/wishlist/${userId}/add/${product.productId}/addProductToWishList`,
     {
       userId,
@@ -46,7 +46,7 @@ export const removeFromWishlist = createAsyncThunk<
   void,
   { userId: number; productId: number }
 >('/wishlist/remove', async ({ userId, productId }) => {
-  await axios.delete(
+  await api.delete(
     `${API_URL}/wishlist/${userId}/remove/${productId}/removeProductFromWishList`
   );
 });

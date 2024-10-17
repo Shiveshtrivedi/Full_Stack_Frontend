@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IAddress, IAddressState } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const initialState: IAddressState = {
   address: null,
@@ -14,7 +14,7 @@ export const getAddresses = createAsyncThunk(
   'address/getAddresses',
   async (userId: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `${API_URL}/shippingAddress/${userId}/getAddressByUserId`
       );
       return response.data;
@@ -30,7 +30,7 @@ export const postAddress = createAsyncThunk(
   'address/postAddress',
   async (addressData: IAddress, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${API_URL}/shippingAddress/addAddress`,
         addressData
       );
@@ -47,7 +47,7 @@ export const updateAddress = createAsyncThunk(
   'address/updateAddress',
   async (addressData: IAddress, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `${API_URL}/shippingAddress/${addressData.shippingAddressID}/updateAddress`,
         addressData
       );

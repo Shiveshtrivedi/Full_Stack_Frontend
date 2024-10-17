@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import {
@@ -15,12 +15,7 @@ import {
 } from '../redux/slices/wishlistSlice';
 import { toast } from 'react-toastify';
 import { fetchAllReviews } from '../redux/slices/userReviewSlice';
-import {
-  IProduct,
-  TPriceFilter,
-  TRatingFilter,
-  EStatus,
-} from '../utils/type/types';
+import { IProduct, EStatus } from '../utils/type/types';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import NoProductFound from './noProductFound';
 import Star from './star';
@@ -28,7 +23,6 @@ import { useAddToCart } from '../hooks/useCart';
 import { useProductFilter } from '../hooks/useFilter';
 import Loading from './loading';
 import NetworkErrorPage from './networkError';
-import { FiMenu } from 'react-icons/fi';
 import { getCart } from '../redux/slices/cartSlice';
 import SearchBar from './searchBar';
 
@@ -42,27 +36,8 @@ const Container = styled.div`
   }
 `;
 
-const FilterBox = styled.div`
-  width: 15%;
-  padding: 20px;
-  background-color: #fff;
-  border-right: 1px solid #ddd;
-  box-shadow: 0 0 10px #00000020;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  @media (max-width: 768px) {
-    width: 90%;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-`;
-
-const ProductBox = styled.div<{ viewMode: string; isFilterVisible: boolean }>`
-  width: ${(props) => (props.isFilterVisible ? '85%' : '100%')};
+const ProductBox = styled.div<{ viewMode: string }>`
+  width: '100%';
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -73,20 +48,6 @@ const ProductBox = styled.div<{ viewMode: string; isFilterVisible: boolean }>`
     flex-direction 0.5s ease;
   @media (max-width: 768px) {
     width: 100%;
-  }
-`;
-
-const FilterDropdown = styled.select`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    margin-bottom: 10px;
   }
 `;
 
@@ -158,45 +119,8 @@ const ProductNameContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 80px;
   @media (max-width: 768px) {
     max-width: 150px;
-  }
-`;
-
-const FilterButton = styled.button`
-  color: #4caf50;
-  background-color: #ffffff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  box-shadow: 0 0 10px #00000060;
-  transition: background-color 0.2s ease-in-out;
-  margin: 20px 20px;
-
-  @media (max-width: 768px) {
-    padding: 8px 16px;
-    font-size: 14px;
-    margin: 10px 10px;
-  }
-`;
-
-const ToggleButton = styled.button`
-  background-color: #4caf50;
-  color: #ffffff;
-  padding: 10px;
-  width: 100%;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 10px 10px 5px;
-  box-shadow: 0 0 10px #00000040;
-  transition: background-color 0.3s ease-in-out;
-
-  @media (max-width: 768px) {
-    padding: 8px;
-    font-size: 14px;
   }
 `;
 
@@ -229,14 +153,15 @@ const ProductListItem = styled.div`
   align-items: center;
   padding: 20px;
   border: 1px solid #ddd;
-  width: 100%;
+  width: 95%;
   margin-bottom: 15px;
   border-radius: 10px;
   box-shadow: 0 0 10px #00000010;
 
-  @media (max-width: 768px) {
+  @media (min-width: 481px) and (max-width: 768px) {
     padding: 15px;
     margin-bottom: 10px;
+    width: 93%;
 
     img {
       width: 80px;
@@ -251,25 +176,34 @@ const ProductListItem = styled.div`
       margin-bottom: 10px;
     }
   }
+  @media (max-width: 481px) {
+    padding: 15px;
+    margin-bottom: 10px;
+    width: 85%;
+
+    img {
+      width: 60px;
+      height: 80px;
+      margin-bottom: 12px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    div {
+      flex: 1;
+      margin-bottom: 8px;
+    }
+  }
 `;
 
 const ImageHeartContainer = styled.div`
   display: flex;
   align-items: center;
-  // justify-content: space-between;
   justify-content: center;
   width: 100%;
   margin-bottom: 10px;
   position: relative;
 `;
-
-// const ImageHeartContainerList = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   width: 100%;
-//   margin-bottom: 10px;
-// `;
 
 const WishlistButton = styled.div<{ viewMode: string; isInWishlist: boolean }>`
   color: ${(props) => (props.isInWishlist ? '#e64a19' : '#ff5722')};
@@ -300,28 +234,12 @@ const WishlistButton = styled.div<{ viewMode: string; isInWishlist: boolean }>`
   }
 `;
 
-// const ButtonList = styled.div`
-//  display: flex,
-//  justifyContent: center,
-//  margin: 0 auto,
-//  gap: 10%,
-//  width: 100%,
-// `;
-
 const ActionButton = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
   gap: 10%;
   width: 100%;
-`;
-const Hamburger = styled(FiMenu)<{ isFilterVisible: boolean }>`
-  cursor: pointer;
-  margin: 5px 5px;
-  font-size: 150%;
-  position: absolute;
-  top: 23%;
-  color: ${(props) => (props.isFilterVisible ? '#fefefe' : '#000000')};
 `;
 
 const LowStockAlert = styled.div`
@@ -345,9 +263,7 @@ const LowStockAlert = styled.div`
 `;
 
 const ProductList: React.FC = () => {
-  const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector((state: RootState) => state.products.products);
   const status = useSelector((state: RootState) => state.products.status);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const userId = useSelector((state: RootState) => state.auth.user.id);
@@ -376,7 +292,7 @@ const ProductList: React.FC = () => {
       dispatch(fetchAllReviews());
       dispatch(getCart({ userId }));
     }
-  }, [dispatch, status, products, userId]);
+  }, [dispatch, status, userId]);
 
   if (status === EStatus.Loading) {
     return <Loading />;
@@ -400,21 +316,21 @@ const ProductList: React.FC = () => {
     }
   };
 
-  const handleToDelete = (id: number) => {
-    dispatch(deleteProduct(id));
-    toast.error('Item deleted');
+  const handleToDelete = async (id: number) => {
+    try {
+      await dispatch(deleteProduct(id)).unwrap();
+      toast.success('Item deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      toast.error('Failed to delete item. Please try again.');
+    }
   };
-
   const handleResetFilter = () => {
     dispatch(resetFilter());
 
     handlePriceFilterChange('all');
     handleRatingFilterChange('all');
     handleCategoryFilterChange('all');
-  };
-
-  const toggleFilterVisibility = () => {
-    setIsFilterVisible((prev) => !prev);
   };
 
   return (
@@ -427,67 +343,20 @@ const ProductList: React.FC = () => {
         ratingFilter={ratingFilter}
         handleRatingFilterChange={handleRatingFilterChange}
         handleResetFilters={handleResetFilter}
+        viewMode={viewMode}
+        handleToggleViewMode={handleViewModeChange}
       />
-      <Hamburger
-        onClick={toggleFilterVisibility}
-        isFilterVisible={isFilterVisible}
-      />
-      {isFilterVisible && (
-        <FilterBox>
-          <FilterDropdown
-            value={priceFilter}
-            onChange={(e) =>
-              handlePriceFilterChange(e.target.value as TPriceFilter)
-            }
-          >
-            <option value="all">All Prices</option>
-            <option value="low">Low (i will set it don't wory)</option>
-            <option value="medium">Medium ($50 - $100)</option>
-            <option value="high">High (≥ $100)</option>
-          </FilterDropdown>
-
-          <FilterDropdown
-            value={ratingFilter}
-            onChange={(e) =>
-              handleRatingFilterChange(e.target.value as TRatingFilter)
-            }
-          >
-            <option value="all">All Ratings</option>
-            <option value="1-star">1 Star</option>
-            <option value="2-star">2 Stars</option>
-            <option value="3-star">3 Stars</option>
-            <option value="4-star">4 Stars</option>
-            <option value="5-star">5 Stars</option>
-          </FilterDropdown>
-
-          <FilterDropdown
-            value={categoryFilter}
-            onChange={(e) => handleCategoryFilterChange(e.target.value)}
-          >
-            <option value="all">All Categories</option>
-            <option value="electronics">Electronics</option>
-            <option value="jewelery">Jewelry</option>
-            <option value="men's clothing">Mens Clothing</option>
-            <option value="women's clothing">Womens Clothing</option>
-          </FilterDropdown>
-
-          <FilterButton onClick={handleResetFilter}>Reset Filters</FilterButton>
-          <ToggleButton onClick={handleViewModeChange}>
-            {viewMode === 'grid' ? 'List' : 'Grid'} View
-          </ToggleButton>
-        </FilterBox>
-      )}
 
       {filteredProducts.length === 0 ? (
         <NoProductFound />
       ) : (
-        <ProductBox viewMode={viewMode} isFilterVisible={isFilterVisible}>
+        <ProductBox viewMode={viewMode}>
           {filteredProducts.map((product: IProduct) =>
             viewMode === 'grid' ? (
               <ProductGridItem key={product.productId}>
                 {product.stock < 10 && (
                   <LowStockAlert>
-                    Only {product.stock}! product reamaining
+                    Only {product.stock}! product remaining
                   </LowStockAlert>
                 )}
                 <ImageHeartContainer>

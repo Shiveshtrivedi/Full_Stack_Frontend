@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import {
   DashboardData,
   DashboardState,
@@ -9,6 +8,7 @@ import {
   Product,
   User,
 } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
@@ -18,15 +18,15 @@ export const fetchDashboardData = createAsyncThunk<
   { rejectValue: string }
 >('/admin/dashboard', async (_, { rejectWithValue }) => {
   try {
-    const userResponse = await axios.get<User[]>(`${API_URL}/user/allUser`);
-    const productResponse = await axios.get<Product[]>(
+    const userResponse = await api.get<User[]>(`${API_URL}/user/allUser`);
+    const productResponse = await api.get<Product[]>(
       `${API_URL}/product/all/fetchProducts`
     );
-    const saleResponse = await axios.get<ISale[]>(`${API_URL}/sales`);
+    const saleResponse = await api.get<ISale[]>(`${API_URL}/sales`);
 
-    const revenueResponse = await axios.get(`${API_URL}/revenue/total`);
+    const revenueResponse = await api.get(`${API_URL}/revenue/total`);
 
-    const orderResponse = await axios.get<IOrder[]>(`${API_URL}/order`);
+    const orderResponse = await api.get<IOrder[]>(`${API_URL}/order`);
     return {
       users: userResponse.data,
       products: productResponse.data,

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import {
   InventoryItem,
   InventoryState,
   UpdateStockRequest,
 } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const initialState: InventoryState = {
   items: [],
@@ -17,7 +17,7 @@ const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 export const fetchInventory = createAsyncThunk(
   'inventory/fetchInventory',
   async (productId: number) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/inventory/${productId}/getInventory`
     );
     return response.data;
@@ -27,7 +27,7 @@ export const fetchInventory = createAsyncThunk(
 export const addInventoryItem = createAsyncThunk<InventoryItem[], number>(
   'inventory/addInventoryItem',
   async (productId: number) => {
-    const response = await axios.post(
+    const response = await api.post(
       `${API_URL}/inventory/${productId}/createInventory`,
       { productId }
     );
@@ -38,7 +38,7 @@ export const addInventoryItem = createAsyncThunk<InventoryItem[], number>(
 export const updateStock = createAsyncThunk(
   'inventory/updateStock',
   async (updateStockRequest: UpdateStockRequest) => {
-    const response = await axios.put(
+    const response = await api.put(
       `${API_URL}/inventory/updateStock`,
       updateStockRequest
     );

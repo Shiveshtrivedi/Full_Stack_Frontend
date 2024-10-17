@@ -6,7 +6,7 @@ import {
   IUpdateOrderArgs,
 } from '../../utils/type/types';
 import { getOrdersFromCookies } from '../../utils/cookie/cookieUtils';
-import axios from 'axios';
+import { api } from './authSlice';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
@@ -21,7 +21,7 @@ const initialState: IOrderState = {
 export const fetchOrdersByUserId = createAsyncThunk<IOrder[], number>(
   'order/fetchOrdersByUserId',
   async (userId: number) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/order/user/${userId}/getOrderByUserId`
     );
     return response.data;
@@ -31,7 +31,7 @@ export const fetchOrdersByUserId = createAsyncThunk<IOrder[], number>(
 export const fetchOrderByOrderId = createAsyncThunk<IOrder, number>(
   'order/fetchOrderByOrderId',
   async (orderId: number) => {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/order/${orderId}/getOrderByOrderId`
     );
     return response.data;
@@ -42,10 +42,7 @@ export const createOrder = createAsyncThunk<IOrder, ICreateOrderRequest>(
   'order/createOrder',
   async (orderData: ICreateOrderRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/order/placeOrder`,
-        orderData
-      );
+      const response = await api.post(`${API_URL}/order/placeOrder`, orderData);
       return response.data;
     } catch (error: any) {
       console.error('Error creating order:', error);
@@ -58,7 +55,7 @@ export const updateOrder = createAsyncThunk<IOrder, IUpdateOrderArgs>(
   'orders/updateOrder',
   async ({ orderId, orderData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `${API_URL}/order/${orderId}/updateStatus`,
         orderData
       );

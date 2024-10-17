@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IAdminHistory, IAdminHistoryState } from '../../utils/type/types';
+import { api } from './authSlice';
 
 const API_URL = process.env.REACT_APP_USER_API_URL;
 
@@ -10,7 +10,7 @@ export const fetchProductHistory = createAsyncThunk<
   { rejectValue: string }
 >('/fetch/adminProduct/history', async (userId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${API_URL}/history/${userId}/adminProductHistoryByUserId`
     );
     return response.data;
@@ -25,7 +25,7 @@ export const deleteAdminHistory = createAsyncThunk<
   { rejectValue: string }
 >('adminHistory/delete', async ({ historyId }, { rejectWithValue }) => {
   try {
-    await axios.delete(`${API_URL}/history/${historyId}/deleteProducthistory`);
+    await api.delete(`${API_URL}/history/${historyId}/deleteProducthistory`);
     return historyId;
   } catch (error: any) {
     return rejectWithValue(
@@ -40,7 +40,7 @@ export const clearAdminHistory = createAsyncThunk<
   { rejectValue: string }
 >('adminHistory/clear', async (userId, { rejectWithValue }) => {
   try {
-    await axios.delete(`${API_URL}/history/clear/${userId}/clearHistory`);
+    await api.delete(`${API_URL}/history/clear/${userId}/clearHistory`);
   } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Failed to clear history');
   }

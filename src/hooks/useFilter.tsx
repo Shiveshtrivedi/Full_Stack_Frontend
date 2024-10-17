@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../utils/type/types';
 import { useLocation } from 'react-router-dom';
 
-export const useProductFilter = () => {
+export const useProductFilter = (initialViewMode: 'grid' | 'list' = 'grid') => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const category = query.get('category');
@@ -54,11 +54,11 @@ export const useProductFilter = () => {
   const isPriceMatch = (price: number, filter: TPriceFilter): boolean => {
     switch (filter) {
       case 'low':
-        return price < 50;
+        return price < 1500;
       case 'medium':
-        return price >= 50 && price < 100;
+        return price >= 1500 && price < 5000;
       case 'high':
-        return price >= 100;
+        return price >= 5000;
       default:
         return true;
     }
@@ -89,17 +89,25 @@ export const useProductFilter = () => {
     return title.toLowerCase().includes(searchTerm.toLowerCase());
   };
 
-  const filteredProducts: IProduct[] = products.filter((product: IProduct) => {
-    const averageRating = averageRatings[product.productId] || 0;
+  const filteredProducts = useMemo(() => {
+    return products.filter((product: IProduct) => {
+      const averageRating = averageRatings[product.productId] || 0;
 
-    return (
-      isPriceMatch(product.price, priceFilter) &&
-      isRatingMatch(averageRating, ratingFilter) &&
-      isCategoryMatch(product.category, categoryFilter) &&
-      isSearchMatch(product.productName, searchTerm)
-    );
-  });
-
+      return (
+        isPriceMatch(product.price, priceFilter) &&
+        isRatingMatch(averageRating, ratingFilter) &&
+        isCategoryMatch(product.category, categoryFilter) &&
+        isSearchMatch(product.productName, searchTerm)
+      );
+    });
+  }, [
+    products,
+    priceFilter,
+    ratingFilter,
+    categoryFilter,
+    searchTerm,
+    averageRatings,
+  ]);
   return {
     filteredProducts,
     priceFilter,
