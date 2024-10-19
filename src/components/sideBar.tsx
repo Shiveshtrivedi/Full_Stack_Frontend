@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const UnorderedList = styled.ul`
@@ -27,42 +27,41 @@ const LinkValue = styled(Link)`
 `;
 
 const SideBar = () => {
-  const [activeLink, setActiveLink] = useState('/adminLayout/dashboard');
 
-  const handleLinkClick = (path: string) => {
-    setActiveLink(path);
-  };
+  const location = useLocation();
+
   return (
     <div>
       <UnorderedList>
-        <ListItem active={activeLink === '/adminLayout/dashboard'}>
+        <ListItem
+          active={
+            location.pathname === '/adminLayout/dashboard' ||
+            location.pathname === '/adminLayout'
+          }
+        >
           <LinkValue
             to="/adminLayout/dashboard"
-            onClick={() => handleLinkClick('/adminLayout/dashboard')}
           >
             Dashboard
           </LinkValue>
         </ListItem>
-        <ListItem active={activeLink === '/adminLayout/users'}>
+        <ListItem active={location.pathname === '/adminLayout/users'}>
           <LinkValue
             to="/adminLayout/users"
-            onClick={() => handleLinkClick('/adminLayout/users')}
           >
             User Management
           </LinkValue>
         </ListItem>
-        <ListItem active={activeLink === '/adminLayout/products'}>
+        <ListItem active={location.pathname === '/adminLayout/products'}>
           <LinkValue
             to="/adminLayout/products"
-            onClick={() => handleLinkClick('/adminLayout/products')}
           >
             Product Management
           </LinkValue>
         </ListItem>
-        <ListItem active={activeLink === '/adminLayout/sales'}>
+        <ListItem active={location.pathname === '/adminLayout/sales'}>
           <LinkValue
             to="/adminLayout/sales"
-            onClick={() => handleLinkClick('/adminLayout/sales')}
           >
             Sales Report
           </LinkValue>

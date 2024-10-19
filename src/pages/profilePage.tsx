@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { getAddresses, updateAddress } from '../redux/slices/addressSlice';
 import { updateUser } from '../redux/slices/userManagementSlice';
 import { IAddress, IUserForAdmin } from '../utils/type/types';
+import GoBackButton from '../components/goBackButton';
 
 const Container = styled.div`
   max-width: 800px;
@@ -189,6 +190,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton />
       <Heading>Profile Page</Heading>
       {user && (
         <ProfileInfo>

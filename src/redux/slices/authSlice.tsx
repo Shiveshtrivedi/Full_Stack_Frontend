@@ -146,7 +146,6 @@ const authSlice = createSlice({
           state.error = '';
           state.userEmail = action.payload.user.email;
           state.isAdmin = action.payload.user.isAdmin ?? false;
-          console.log('token', state.token);
         }
       )
       .addCase(

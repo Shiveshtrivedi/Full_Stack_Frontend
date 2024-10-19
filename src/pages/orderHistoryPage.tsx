@@ -4,6 +4,9 @@ import { AppDispatch, RootState } from '../redux/store';
 import { fetchOrdersByUserId } from '../redux/slices/orderSlice';
 import styled from 'styled-components';
 import { getCart } from '../redux/slices/cartSlice';
+import GoBackButton from '../components/goBackButton';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from '../components/scrollButton';
 
 const HistoryContainer = styled.div`
   padding: 20px;
@@ -64,6 +67,8 @@ const OrderHistoryPage: React.FC = () => {
   const loading = useSelector((state: RootState) => state.order.loading);
   const error = useSelector((state: RootState) => state.order.error);
 
+  const { isVisible, scrollToTop } = useScrollToTop(300);
+
   const userid = Number(userId);
 
   useEffect(() => {
@@ -77,6 +82,7 @@ const OrderHistoryPage: React.FC = () => {
 
   return (
     <HistoryContainer>
+      <GoBackButton />
       <h1>Order History</h1>
       {loading && <p>Loading orders...</p>}
       {error && <p>Error loading orders: {error}</p>}
@@ -121,6 +127,7 @@ const OrderHistoryPage: React.FC = () => {
           </OrderCard>
         ))
       )}
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </HistoryContainer>
   );
 };

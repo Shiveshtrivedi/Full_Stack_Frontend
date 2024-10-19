@@ -6,6 +6,7 @@ import {
   IProductWithoutId,
 } from '../../utils/type/types';
 import { api } from './authSlice';
+import { toast } from 'react-toastify';
 
 const initialState: IProductState = {
   products: [],
@@ -14,6 +15,8 @@ const initialState: IProductState = {
   status: 'idle',
   error: '',
   productId: 0,
+  //  pageNumber:1,
+  //  pageSize:9
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL;
@@ -149,10 +152,12 @@ const productSlice = createSlice({
         addProduct.fulfilled,
         (state, action: PayloadAction<IProduct>) => {
           state.products.push(action.payload);
+          toast.success('Product added successfully');
         }
       )
       .addCase(addProduct.rejected, (state, action) => {
         state.error = action.error.message ?? 'Failed to add product';
+        toast.error('Error occurred while adding product');
       })
       .addCase(
         deleteProduct.rejected,
@@ -164,6 +169,7 @@ const productSlice = createSlice({
         state.products = state.products.filter(
           (product) => product.productId !== action.meta.arg
         );
+        toast.error('Item deleted successfully');
       })
       .addCase(
         fetchProductsByCategory.fulfilled,

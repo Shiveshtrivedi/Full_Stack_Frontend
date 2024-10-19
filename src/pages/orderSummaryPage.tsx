@@ -132,7 +132,6 @@ const OrderSummary: React.FC = () => {
           </ListItem>
         ))}
       </DetailsList>
-
       <BackButton onClick={() => navigate(-1)}>Go Back</BackButton>
     </SummaryContainer>
   );

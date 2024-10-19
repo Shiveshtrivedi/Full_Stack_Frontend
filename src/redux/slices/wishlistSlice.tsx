@@ -14,7 +14,6 @@ const initialState: IWishListState = {
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
-console.log('api url in user reive', API_URL);
 
 export const getWishlist = createAsyncThunk<IWishListItem[], number>(
   '/wishlist/items',
@@ -76,6 +75,7 @@ const wishListSlice = createSlice({
       .addCase(addToWishlist.fulfilled, (state, action) => {
         state.loading = false;
         state.items.push(action.payload);
+        toast.success(`Added to wishlist`);
       })
       .addCase(addToWishlist.rejected, (state, action) => {
         state.loading = false;

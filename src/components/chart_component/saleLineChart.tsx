@@ -31,10 +31,9 @@ const CharContainer = styled.div`
 
 const SaleLineChart = () => {
   const sales = useSelector((root: RootState) => root.dashBoard.sales);
-  console.log('sales', sales);
 
   const chartData = {
-    labels: sales.map((sale) => new Date(sale.startDate).toLocaleDateString()),
+    labels: sales.map((sale) => new Date(sale.saleDate).toLocaleDateString()),
     datasets: [
       {
         label: 'Total Product Sale',

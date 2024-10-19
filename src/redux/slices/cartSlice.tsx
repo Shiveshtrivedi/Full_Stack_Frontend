@@ -65,8 +65,6 @@ export const updateCartItem = createAsyncThunk<
       items
     );
 
-    toast.success('Items updated in cart');
-
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -86,7 +84,6 @@ export const clearCart = createAsyncThunk<
 >('cart/clearCart', async ({ userId }, { rejectWithValue }) => {
   try {
     await api.delete(`${API_URL}/cart/clear/${userId}/deletItemsInCart`);
-    toast.success('Cart cleared successfully');
   } catch (error) {
     const axiosError = error as AxiosError;
     toast.error(
@@ -187,6 +184,7 @@ const cartSlice = createSlice({
           `cart_${state.userId}`,
           JSON.stringify(state.items)
         );
+        
       })
       .addCase(updateCartItem.rejected, (state, action) => {
         console.error(action.payload);
@@ -196,6 +194,7 @@ const cartSlice = createSlice({
         state.totalAmount = 0;
         localStorage.removeItem(`cart_${state.userId}`);
         localStorage.setItem('totalAmount', '0');
+        toast.error('Cart cleared');
       })
       .addCase(clearCart.rejected, (state, action) => {
         console.error(action.payload);

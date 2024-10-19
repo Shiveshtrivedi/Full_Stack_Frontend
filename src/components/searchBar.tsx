@@ -37,6 +37,7 @@ const SearchForm = styled.form`
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 10px;
+    width: 90%;
   }
 `;
 
@@ -50,7 +51,7 @@ const SearchContainer = styled.div`
   margin-right: 10px;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     margin-bottom: 10px;
   }
 `;
@@ -75,10 +76,10 @@ const SearchButton = styled.button`
   cursor: pointer;
   font-size: 18px;
   padding: 10px;
-  color: black;
+  color: #000000;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 10%;
     justify-content: center;
   }
 `;
@@ -103,7 +104,7 @@ const ResetButton = styled.button`
   background: transparent;
   border: 1px solid #ccc;
   border-radius: 25px;
-  color: black;
+  color: #000000;
   padding: 5px 10px;
   cursor: pointer;
   margin-left: 10px;
@@ -185,11 +186,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }
       >
         <option value="all">All Ratings</option>
-        <option value="1">1 Star</option>
-        <option value="2">2 Stars</option>
-        <option value="3">3 Stars</option>
-        <option value="4">4 Stars</option>
-        <option value="5">5 Stars</option>
+        <option value="1-star">1 Star</option>
+        <option value="2-star">2 Stars</option>
+        <option value="3-star">3 Stars</option>
+        <option value="4-star">4 Stars</option>
+        <option value="5-star">5 Stars</option>
       </FilterDropdown>
 
       <ResetButton

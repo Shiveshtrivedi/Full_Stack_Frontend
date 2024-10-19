@@ -16,6 +16,9 @@ import styled from 'styled-components';
 import mqtt from 'mqtt';
 import RevenueLineChart from './chart_component/revenueLineChart';
 import { useNavigate } from 'react-router-dom';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from './scrollButton';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -83,8 +86,8 @@ const StyledTable = styled.table`
 
 const ViewButton = styled.button`
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #4caf50;
+  color: #fefefe;
   font-size: 16px;
   border: none;
   border-radius: 4px;
@@ -94,7 +97,7 @@ const ViewButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
     transform: scale(1.05);
   }
 
@@ -108,16 +111,29 @@ const ViewButton = styled.button`
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
   }
 `;
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
 
 const AdminDashboard = () => {
   const { users, products, sales, orders, loading, error } = useSelector(
     (state: RootState) => state.dashBoard
   );
 
-  console.log('orders', orders);
-
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { isVisible, scrollToTop } = useScrollToTop(300);
 
   useEffect(() => {
     dispatch(fetchDashboardData());
@@ -174,6 +190,7 @@ const AdminDashboard = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>Admin Dashboard</Title>
       <Section>
         <ProductBarChart />
@@ -309,6 +326,7 @@ const AdminDashboard = () => {
           </tbody>
         </StyledTable>
       </Section>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </Container>
   );
 };

@@ -6,7 +6,7 @@ import ReviewList from '../components/reviewList';
 import ReviewForm from '../components/reviewForm';
 import { fetchReviews } from '../redux/slices/userReviewSlice';
 import { AppDispatch, RootState } from '../redux/store';
-import { fetchProducts } from '../redux/slices/productSlice';
+// import { fetchProducts } from '../redux/slices/productSlice';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import Star from '../components/star';
@@ -14,6 +14,7 @@ import { useAddToCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { IProduct } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
+import GoBackButton from '../components/goBackButton';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -85,16 +86,16 @@ const ProductPage: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user.id);
   useEffect(() => {
     if (products.length === 0) {
-      setLoading(true);
-      dispatch(fetchProducts())
-        .unwrap()
-        .then(() => {
-          setLoading(false);
-        })
-        .catch(() => {
-          setError('Failed to fetch products');
-          setLoading(false);
-        });
+      // setLoading(true);
+      // dispatch(fetchProducts())
+      //   .unwrap()
+      //   .then(() => {
+      //     setLoading(false);
+      //   })
+      //   .catch(() => {
+      //     setError('Failed to fetch products');
+      //     setLoading(false);
+      //   });
     } else {
       setLoading(false);
     }
@@ -120,20 +121,23 @@ const ProductPage: React.FC = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <Container>
-      <Zoom>
-        <Image src={product.image} alt={product.productName} />
-      </Zoom>
-      <Title>{product.productName}</Title>
-      <Star reviews={averageRating} />
-      <Price>{product.price.toFixed(2)} &#8377;</Price>
-      <Description>{product.productDescription}</Description>
-      <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
-      {product.productId && (
-        <ReviewForm productId={product.productId} userId={userId} />
-      )}
-      {product.productId && <ReviewList productId={product.productId} />}
-    </Container>
+    <div>
+      <GoBackButton />
+      <Container>
+        <Zoom>
+          <Image src={product.image} alt={product.productName} />
+        </Zoom>
+        <Title>{product.productName}</Title>
+        <Star reviews={averageRating} />
+        <Price>{product.price.toFixed(2)} &#8377;</Price>
+        <Description>{product.productDescription}</Description>
+        <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+        {product.productId && (
+          <ReviewForm productId={product.productId} userId={userId} />
+        )}
+        {product.productId && <ReviewList productId={product.productId} />}
+      </Container>
+    </div>
   );
 };
 

@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { BsCart } from 'react-icons/bs';
-// import { setSearchTerm } from '../redux/slices/searchSlice';
 import { Link } from 'react-router-dom';
-// import { CiSearch } from 'react-icons/ci';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -47,20 +45,6 @@ const Nav = styled.nav`
     gap: 15px;
   }
 `;
-
-// const SearchBar = styled.input`
-//   padding: 5px;
-//   border: 1px solid #cccccc;
-//   border-radius: 4px;
-//   width: 100px;
-//   height: 25x;
-//   flex-shrink: 0;
-//   font-size: 120%;
-
-//   @media (max-width: 768px) {
-//     width: 80%;
-//   }
-// `;
 
 const UserActions = styled.div`
   display: flex;
@@ -215,12 +199,9 @@ const ImageLogo = styled.div`
 `;
 
 const Header: React.FC = () => {
-  // const [searchInput, setSearchInput] = useState<string>('');
   const user = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
-  // const totalCartItems = useSelector(
-  //   (state: RootState) => state.cart.totalItems
-  // );
+
   const items = useSelector((state: RootState) => state.cart.items);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -228,11 +209,8 @@ const Header: React.FC = () => {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const closeDropdown = () => setIsDropdownOpen(false);
 
-  // const dispatch = useDispatch<AppDispatch>();
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    //   dispatch(setSearchTerm(searchInput));
   };
 
   return (
@@ -259,20 +237,6 @@ const Header: React.FC = () => {
               <StyledLink to="/adminLayout">Admin Dashboard</StyledLink>
             )}
             <form onSubmit={handleSearch}>
-              {/* <SearchBar
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search..."
-              /> */}
-              {/* <CiSearch
-                style={{
-                  position: 'relative',
-                  right: '7%',
-                  fontSize: '180%',
-                  top: '5%',
-                }}
-              /> */}
             </form>
             <StyledLink to="/cart">
               <CartContainer>

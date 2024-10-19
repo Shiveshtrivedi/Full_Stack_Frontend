@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IAdminHistory, IAdminHistoryState } from '../../utils/type/types';
 import { api } from './authSlice';
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_USER_API_URL;
 
@@ -77,6 +78,7 @@ const adminHistorySlice = createSlice({
         state.histories = state.histories.filter(
           (history) => history.historyId !== action.payload
         );
+        toast.error('Product removed from history');
       })
       .addCase(deleteAdminHistory.rejected, (state, action) => {
         state.loading = false;
@@ -88,6 +90,7 @@ const adminHistorySlice = createSlice({
       .addCase(clearAdminHistory.fulfilled, (state) => {
         state.histories = [];
         state.loading = false;
+        toast.error('History Cleared');
       })
       .addCase(clearAdminHistory.rejected, (state, action) => {
         state.loading = false;

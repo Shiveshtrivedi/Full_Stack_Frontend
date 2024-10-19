@@ -8,6 +8,10 @@ import {
 } from '../redux/slices/userManagementSlice';
 import { IUserForAdmin } from '../utils/type/types';
 import styled from 'styled-components';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from './scrollButton';
 
 const Container = styled.div`
   max-width: 900px;
@@ -121,10 +125,27 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
+
+
 const UserManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const users = useSelector((state: RootState) => state.userManagement.users);
   const currentUserId = useSelector((state: RootState) => state.auth.user.id);
+  const { isVisible, scrollToTop } = useScrollToTop(300);
   const loading = useSelector(
     (state: RootState) => state.userManagement.loading
   );
@@ -138,6 +159,7 @@ const UserManagement: React.FC = () => {
     profileImage: '',
     isAdmin: false,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -183,6 +205,7 @@ const UserManagement: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>User Management</Title>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
@@ -270,6 +293,8 @@ const UserManagement: React.FC = () => {
           )}
         </tbody>
       </StyledTable>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
+
     </Container>
   );
 };

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import {
-  fetchProducts,
+  // fetchProducts,
   updateProduct,
   deleteProduct,
 } from '../redux/slices/productSlice';
 import { IProduct } from '../utils/type/types';
 import styled from 'styled-components';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from './scrollButton';
 
 const Container = styled.div`
   max-width: 1000px;
@@ -90,6 +94,21 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
+
 const ProductManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector((root: RootState) => root.products.products);
@@ -104,9 +123,11 @@ const ProductManagement: React.FC = () => {
     stock: 0,
     rating: { rate: 0, count: 0 },
   });
+  const navigate = useNavigate();
+  const { isVisible, scrollToTop } = useScrollToTop();
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    // dispatch(fetchProducts());
   }, [dispatch]);
 
   const handleEditClick = (product: IProduct) => {
@@ -132,6 +153,7 @@ const ProductManagement: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>Product Management</Title>
       <table>
         <thead>
@@ -226,6 +248,7 @@ const ProductManagement: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </Container>
   );
 };

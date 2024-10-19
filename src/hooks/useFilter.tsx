@@ -13,7 +13,11 @@ export const useProductFilter = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const category = query.get('category');
-  const products = useSelector((state: RootState) => state.products.products);
+  const products = useSelector(
+    (state: RootState) => state.products.products
+  );
+
+  // console.log('products in filter', products, totalCounts);
   const averageRatings = useSelector(
     (state: RootState) => state.reviews.averageRatings
   );

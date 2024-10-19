@@ -88,11 +88,18 @@ export interface IProductWithoutId {
   productDescription?: string;
   category: string;
   stock: number;
+  costPrice: number;
+  sellingPrice: number;
   rating?: {
     rate: number;
     count: number;
   };
 }
+
+// interface IProductResponse{
+//   products:IProduct[];
+//   totalProducts:number;
+// }
 
 export interface IProductState {
   products: IProduct[];
@@ -101,6 +108,8 @@ export interface IProductState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string;
   productId: number;
+  // pageNumber: number;
+  // pageSize: number;
 }
 
 export interface IReview {

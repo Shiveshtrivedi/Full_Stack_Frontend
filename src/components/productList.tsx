@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import {
@@ -7,7 +7,7 @@ import {
   resetFilter,
 } from '../redux/slices/productSlice';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import {
   addToWishlist,
   getWishlist,
@@ -25,6 +25,8 @@ import Loading from './loading';
 import NetworkErrorPage from './networkError';
 import { getCart } from '../redux/slices/cartSlice';
 import SearchBar from './searchBar';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from './scrollButton';
 
 const Container = styled.div`
   display: flex;
@@ -70,7 +72,7 @@ const Image = styled.img<{ viewMode: string }>`
 const Price = styled.p`
   font-size: 16px;
   color: #666666;
-  margin: 0 80px 10px 0;
+  margin: 0 0 10px 0;
 
   @media (max-width: 768px) {
     font-size: 14px;
@@ -262,11 +264,40 @@ const LowStockAlert = styled.div`
   }
 `;
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const TopRatedText = styled.div<{ isVisible: boolean }>`
+  color: #ffcc00;
+  margin-bottom: 3px;
+  font-size: 15px;
+  font-style: italic;
+  animation: ${({ isVisible }) =>
+    isVisible
+      ? css`
+          ${fadeIn} 0.5s ease-in-out
+        `
+      : 'none'};
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+`;
+
 const ProductList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const status = useSelector((state: RootState) => state.products.status);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const userId = useSelector((state: RootState) => state.auth.user.id);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(9);
+
+  const { isVisible, scrollToTop } = useScrollToTop();
 
   const handleAddToCart = useAddToCart();
   const {
@@ -292,7 +323,7 @@ const ProductList: React.FC = () => {
       dispatch(fetchAllReviews());
       dispatch(getCart({ userId }));
     }
-  }, [dispatch, status, userId]);
+  }, [dispatch, status, userId, pageNumber, pageSize]);
 
   if (status === EStatus.Loading) {
     return <Loading />;
@@ -309,17 +340,14 @@ const ProductList: React.FC = () => {
   const handleAddToWishlist = (product: IProduct) => {
     if (wishlistStatus[product.productId]) {
       dispatch(removeFromWishlist({ userId, productId: product.productId }));
-      toast.error(`${product.productName} removed from wishlist`);
     } else {
       dispatch(addToWishlist({ userId, product }));
-      toast.success(`Added to wishlist`);
     }
   };
 
   const handleToDelete = async (id: number) => {
     try {
       await dispatch(deleteProduct(id)).unwrap();
-      toast.success('Item deleted successfully');
     } catch (error) {
       console.error('Failed to delete product:', error);
       toast.error('Failed to delete item. Please try again.');
@@ -332,6 +360,17 @@ const ProductList: React.FC = () => {
     handleRatingFilterChange('all');
     handleCategoryFilterChange('all');
   };
+
+  const handleNextPage = () => {
+    setPageNumber((prevPage) => prevPage + 1);
+    console.log('after', pageNumber);
+  };
+
+  const handlePrevPage = () => {
+    setPageNumber((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  console.log('filtered products', filteredProducts, pageNumber);
 
   return (
     <Container>
@@ -359,6 +398,11 @@ const ProductList: React.FC = () => {
                     Only {product.stock}! product remaining
                   </LowStockAlert>
                 )}
+                <TopRatedText
+                  isVisible={averageRatings[product.productId] === 5}
+                >
+                  {averageRatings[product.productId] === 5 ? 'Top Rated' : ''}
+                </TopRatedText>
                 <ImageHeartContainer>
                   <Link
                     to={`/products/${product.productId}`}
@@ -376,10 +420,12 @@ const ProductList: React.FC = () => {
                     onClick={() => handleAddToWishlist(product)}
                   >
                     {wishlistStatus[product.productId] ? (
-                      <AiFillHeart style={{ color: 'red', fontSize: '150%' }} />
+                      <AiFillHeart
+                        style={{ color: '#FF0000', fontSize: '150%' }}
+                      />
                     ) : (
                       <AiOutlineHeart
-                        style={{ color: 'black', fontSize: '125%' }}
+                        style={{ color: '#000', fontSize: '125%' }}
                       />
                     )}
                   </WishlistButton>
@@ -422,6 +468,7 @@ const ProductList: React.FC = () => {
                     Delete
                   </DeleteButton>
                 )}
+                <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
               </ProductGridItem>
             ) : (
               <ProductListItem key={product.productId}>
@@ -442,10 +489,12 @@ const ProductList: React.FC = () => {
                     onClick={() => handleAddToWishlist(product)}
                   >
                     {wishlistStatus[product.productId] ? (
-                      <AiFillHeart style={{ color: 'red', fontSize: '150%' }} />
+                      <AiFillHeart
+                        style={{ color: '#FF0000', fontSize: '150%' }}
+                      />
                     ) : (
                       <AiOutlineHeart
-                        style={{ color: 'red', fontSize: '150%' }}
+                        style={{ color: '#000', fontSize: '125%' }}
                       />
                     )}
                   </WishlistButton>
@@ -484,6 +533,10 @@ const ProductList: React.FC = () => {
               </ProductListItem>
             )
           )}
+          <button onClick={handlePrevPage} disabled={pageNumber === 1}>
+            Previous
+          </button>
+          <button onClick={handleNextPage}>Next</button>
         </ProductBox>
       )}
     </Container>
