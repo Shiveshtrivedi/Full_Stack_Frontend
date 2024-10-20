@@ -5,6 +5,7 @@ import {
   deleteProduct,
   fetchProducts,
   resetFilter,
+  resetStatus,
 } from '../redux/slices/productSlice';
 import { Link } from 'react-router-dom';
 import styled, { keyframes, css } from 'styled-components';
@@ -292,13 +293,16 @@ const TopRatedText = styled.div<{ isVisible: boolean }>`
 const ProductList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const status = useSelector((state: RootState) => state.products.status);
+  const totalProducts = useSelector(
+    (state: RootState) => state.products.totalProducts
+  );
+  console.log('toatl', totalProducts);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const userId = useSelector((state: RootState) => state.auth.user.id);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(9);
 
   const { isVisible, scrollToTop } = useScrollToTop();
-
   const handleAddToCart = useAddToCart();
   const {
     filteredProducts,
@@ -318,7 +322,7 @@ const ProductList: React.FC = () => {
 
   useEffect(() => {
     if (status === EStatus.Idle) {
-      dispatch(fetchProducts());
+      dispatch(fetchProducts({ pageNumber, pageSize })); // Fetch with pagination
       dispatch(getWishlist(userId));
       dispatch(fetchAllReviews());
       dispatch(getCart({ userId }));
@@ -330,11 +334,7 @@ const ProductList: React.FC = () => {
   }
 
   if (status === EStatus.Failed) {
-    return (
-      <div>
-        <NetworkErrorPage />
-      </div>
-    );
+    return <NetworkErrorPage />;
   }
 
   const handleAddToWishlist = (product: IProduct) => {
@@ -353,24 +353,23 @@ const ProductList: React.FC = () => {
       toast.error('Failed to delete item. Please try again.');
     }
   };
+
   const handleResetFilter = () => {
     dispatch(resetFilter());
-
     handlePriceFilterChange('all');
     handleRatingFilterChange('all');
     handleCategoryFilterChange('all');
   };
 
   const handleNextPage = () => {
+    dispatch(resetStatus());
     setPageNumber((prevPage) => prevPage + 1);
-    console.log('after', pageNumber);
   };
 
   const handlePrevPage = () => {
+    dispatch(resetStatus());
     setPageNumber((prevPage) => Math.max(prevPage - 1, 1));
   };
-
-  console.log('filtered products', filteredProducts, pageNumber);
 
   return (
     <Container>
@@ -441,8 +440,7 @@ const ProductList: React.FC = () => {
                   </ProductNameContainer>
                 </Link>
 
-                <Price> {product.price.toFixed(2)} &#8377; </Price>
-
+                <Price>{product.price.toFixed(2)} &#8377;</Price>
                 <Star reviews={averageRatings[product.productId] || 0} />
 
                 <div
@@ -510,7 +508,6 @@ const ProductList: React.FC = () => {
                 </Link>
 
                 <Price>{product.price} &#8377;</Price>
-
                 <Star reviews={averageRatings[product.productId] || 0} />
 
                 <ActionButton>
@@ -520,7 +517,6 @@ const ProductList: React.FC = () => {
                   >
                     Add to Cart
                   </Button>
-
                   {isAdmin && (
                     <DeleteButton
                       onClick={() => handleToDelete(product.productId)}
@@ -530,15 +526,28 @@ const ProductList: React.FC = () => {
                     </DeleteButton>
                   )}
                 </ActionButton>
+                <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
               </ProductListItem>
             )
           )}
-          <button onClick={handlePrevPage} disabled={pageNumber === 1}>
-            Previous
-          </button>
-          <button onClick={handleNextPage}>Next</button>
         </ProductBox>
       )}
+
+      {/* Pagination Controls */}
+      <div>
+        <button onClick={handlePrevPage} disabled={pageNumber === 1}>
+          Previous
+        </button>
+        <button
+          onClick={handleNextPage}
+          disabled={filteredProducts.length < pageSize}
+        >
+          Next
+        </button>
+      </div>
+      <div>
+        <span>Page {pageNumber}</span>
+      </div>
     </Container>
   );
 };

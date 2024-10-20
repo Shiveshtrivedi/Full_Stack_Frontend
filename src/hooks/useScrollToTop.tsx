@@ -26,7 +26,7 @@ const useScrollToTop = (threshold: number = 300) => {
     };
   }, [threshold]);
 
-  return {isVisible,scrollToTop};
+  return { isVisible, scrollToTop };
 };
 
 export default useScrollToTop;

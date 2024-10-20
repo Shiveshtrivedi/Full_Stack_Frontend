@@ -236,8 +236,7 @@ const Header: React.FC = () => {
             {isAdmin && (
               <StyledLink to="/adminLayout">Admin Dashboard</StyledLink>
             )}
-            <form onSubmit={handleSearch}>
-            </form>
+            <form onSubmit={handleSearch}></form>
             <StyledLink to="/cart">
               <CartContainer>
                 <CartIcon />

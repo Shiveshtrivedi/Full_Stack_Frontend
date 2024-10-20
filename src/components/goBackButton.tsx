@@ -22,9 +22,7 @@ const StyledGoBackButton = styled(IoArrowBackOutline)`
 const GoBackButton: React.FC = () => {
   const navigate = useNavigate();
 
-  return (
-    <StyledGoBackButton onClick={() => navigate(-1)} />
-  );
+  return <StyledGoBackButton onClick={() => navigate(-1)} />;
 };
 
 export default GoBackButton;

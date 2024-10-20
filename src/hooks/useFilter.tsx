@@ -13,11 +13,8 @@ export const useProductFilter = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const category = query.get('category');
-  const products = useSelector(
-    (state: RootState) => state.products.products
-  );
-
-  // console.log('products in filter', products, totalCounts);
+  const products = useSelector((state: RootState) => state.products.products);
+  const totalProducts = useSelector((state: RootState) => state.products.totalProducts);
   const averageRatings = useSelector(
     (state: RootState) => state.reviews.averageRatings
   );
@@ -27,9 +24,12 @@ export const useProductFilter = () => {
   const [ratingFilter, setRatingFilter] = useState<TRatingFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<TCategoryFilter>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [wishlistStatus, setWishlistStatus] = useState<Record<string, boolean>>(
-    {}
-  );
+  const [wishlistStatus, setWishlistStatus] = useState<Record<string, boolean>>({});
+  
+  // Add pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 9; // Update this if needed
+
   useEffect(() => {
     const status = wishlist.reduce(
       (acc, item) => {
@@ -40,21 +40,32 @@ export const useProductFilter = () => {
     );
     setWishlistStatus(status);
   }, [wishlist]);
+
   useEffect(() => {
     if (category) {
       setCategoryFilter(category as TCategoryFilter);
     }
   }, [category]);
 
-  const handlePriceFilterChange = (filter: TPriceFilter) =>
-    setPriceFilter(filter);
-  const handleRatingFilterChange = (filter: TRatingFilter) =>
-    setRatingFilter(filter);
-  const handleCategoryFilterChange = (category: string) =>
-    setCategoryFilter(category as TCategoryFilter);
-  const handleViewModeChange = () =>
-    setViewMode(viewMode === 'grid' ? 'list' : 'grid');
+  const handlePriceFilterChange = (filter: TPriceFilter) => setPriceFilter(filter);
+  const handleRatingFilterChange = (filter: TRatingFilter) => setRatingFilter(filter);
+  const handleCategoryFilterChange = (category: string) => setCategoryFilter(category as TCategoryFilter);
+  const handleViewModeChange = () => setViewMode(viewMode === 'grid' ? 'list' : 'grid');
+  
+  // Add methods to change current page
+  const nextPage = () => {
+    if (currentPage < Math.ceil(totalProducts / pageSize)) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
 
+  const previousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
+  // Filter Logic
   const isPriceMatch = (price: number, filter: TPriceFilter): boolean => {
     switch (filter) {
       case 'low':
@@ -112,16 +123,28 @@ export const useProductFilter = () => {
     searchTerm,
     averageRatings,
   ]);
+
+  // Slice the filtered products for pagination
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredProducts.slice(startIndex, startIndex + pageSize);
+  }, [filteredProducts, currentPage, pageSize]);
+
   return {
-    filteredProducts,
+    filteredProducts: paginatedProducts,
     priceFilter,
     ratingFilter,
     categoryFilter,
     viewMode,
     wishlistStatus,
+    currentPage,
+    totalProducts,
     handlePriceFilterChange,
     handleRatingFilterChange,
     handleCategoryFilterChange,
     handleViewModeChange,
+    nextPage,
+    previousPage,
   };
 };
+

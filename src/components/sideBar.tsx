@@ -27,7 +27,6 @@ const LinkValue = styled(Link)`
 `;
 
 const SideBar = () => {
-
   const location = useLocation();
 
   return (
@@ -39,32 +38,16 @@ const SideBar = () => {
             location.pathname === '/adminLayout'
           }
         >
-          <LinkValue
-            to="/adminLayout/dashboard"
-          >
-            Dashboard
-          </LinkValue>
+          <LinkValue to="/adminLayout/dashboard">Dashboard</LinkValue>
         </ListItem>
         <ListItem active={location.pathname === '/adminLayout/users'}>
-          <LinkValue
-            to="/adminLayout/users"
-          >
-            User Management
-          </LinkValue>
+          <LinkValue to="/adminLayout/users">User Management</LinkValue>
         </ListItem>
         <ListItem active={location.pathname === '/adminLayout/products'}>
-          <LinkValue
-            to="/adminLayout/products"
-          >
-            Product Management
-          </LinkValue>
+          <LinkValue to="/adminLayout/products">Product Management</LinkValue>
         </ListItem>
         <ListItem active={location.pathname === '/adminLayout/sales'}>
-          <LinkValue
-            to="/adminLayout/sales"
-          >
-            Sales Report
-          </LinkValue>
+          <LinkValue to="/adminLayout/sales">Sales Report</LinkValue>
         </ListItem>
       </UnorderedList>
     </div>

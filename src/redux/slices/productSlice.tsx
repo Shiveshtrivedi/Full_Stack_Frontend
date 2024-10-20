@@ -17,17 +17,30 @@ const initialState: IProductState = {
   productId: 0,
   //  pageNumber:1,
   //  pageSize:9
+  totalProducts: 0, // Add this line
+  currentPage: 1, // Add this line
+  pageSize: 9,
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL;
 
-export const fetchProducts = createAsyncThunk<IProduct[]>(
-  'products/fetchProducts',
-  async () => {
-    const response = await api.get(`${API_URL}/product/all/fetchProducts`);
-    return response.data;
-  }
-);
+// export const fetchProducts = createAsyncThunk<IProduct[]>(
+//   'products/fetchProducts',
+//   async () => {
+//     const response = await api.get(`${API_URL}/product/all/fetchProducts`);
+//     return response.data;
+//   }
+// );
+
+export const fetchProducts = createAsyncThunk<
+  { products: IProduct[]; totalProducts: number },
+  { pageNumber: number; pageSize: number }
+>('products/fetchProducts', async ({ pageNumber, pageSize }) => {
+  const response = await api.get(`${API_URL}/product/all/fetchProducts`, {
+    params: { pageNumber, pageSize },
+  });
+  return response.data;
+});
 
 export const fetchProductsByUserId = createAsyncThunk<
   IProduct[],
@@ -130,20 +143,30 @@ const productSlice = createSlice({
     resetFilter(state) {
       state.filterProducts = [...state.products];
     },
+    resetStatus(state) {
+      state.status = EStatus.Idle;
+      state.error = '';
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.status = EStatus.Loading;
       })
-      .addCase(
-        fetchProducts.fulfilled,
-        (state, action: PayloadAction<IProduct[]>) => {
-          state.status = EStatus.Succeeded;
-          state.products = action.payload;
-          state.filterProducts = action.payload;
-        }
-      )
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.products = action.payload.products;
+        state.filterProducts = action.payload.products;
+        state.totalProducts = action.payload.totalProducts; // Add this line
+      })
+      // .addCase(
+      //   fetchProducts.fulfilled,
+      //   (state, action: PayloadAction<IProduct[]>) => {
+      //     state.status = EStatus.Succeeded;
+      //     state.products = action.payload;
+      //     state.filterProducts = action.payload;
+      //   }
+      // )
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = EStatus.Failed;
         state.error = action.error.message ?? 'Failed to fetch products';
@@ -229,7 +252,7 @@ const productSlice = createSlice({
   },
 });
 
-export const { addProductToHistory, removeProductFromHistory, resetFilter } =
+export const { addProductToHistory, removeProductFromHistory, resetFilter ,resetStatus} =
   productSlice.actions;
 
 export default productSlice.reducer;

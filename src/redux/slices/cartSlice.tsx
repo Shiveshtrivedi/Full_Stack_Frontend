@@ -184,7 +184,6 @@ const cartSlice = createSlice({
           `cart_${state.userId}`,
           JSON.stringify(state.items)
         );
-        
       })
       .addCase(updateCartItem.rejected, (state, action) => {
         console.error(action.payload);

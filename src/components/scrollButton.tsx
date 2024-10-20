@@ -1,4 +1,3 @@
-
 import React from 'react';
 import styled from 'styled-components';
 import { FaArrowUp } from 'react-icons/fa';
@@ -27,7 +26,10 @@ interface ScrollButtonProps {
   onClick: () => void;
 }
 
-const ScrollToTopButton: React.FC<ScrollButtonProps> = ({ visible, onClick }) => {
+const ScrollToTopButton: React.FC<ScrollButtonProps> = ({
+  visible,
+  onClick,
+}) => {
   return <ScrollButton visible={visible} onClick={onClick} />;
 };
 

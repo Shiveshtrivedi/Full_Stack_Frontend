@@ -140,7 +140,6 @@ const GoBackButton = styled(IoArrowBackOutline)`
   }
 `;
 
-
 const UserManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const users = useSelector((state: RootState) => state.userManagement.users);
@@ -294,7 +293,6 @@ const UserManagement: React.FC = () => {
         </tbody>
       </StyledTable>
       <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
-
     </Container>
   );
 };

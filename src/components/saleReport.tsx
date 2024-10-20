@@ -44,7 +44,7 @@ const DateInputs = styled.div`
 
 const Button = styled.button`
   padding: 10px 15px;
-  background-color: #4caf50; 
+  background-color: #4caf50;
   color: fefefe;
   border: none;
   border-radius: 4px;
@@ -53,7 +53,7 @@ const Button = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #45a049; 
+    background-color: #45a049;
   }
 `;
 
@@ -89,8 +89,6 @@ const GoBackButton = styled(IoArrowBackOutline)`
     font-size: 20px;
   }
 `;
-
-
 
 const SaleReport: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -169,7 +167,6 @@ const SaleReport: React.FC = () => {
         )}
       </div>
       <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
-
     </Container>
   );
 };

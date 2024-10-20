@@ -109,7 +109,9 @@ export interface IProductState {
   error: string;
   productId: number;
   // pageNumber: number;
-  // pageSize: number;
+  pageSize: number;
+  totalProducts: number; // Add this line
+  currentPage: number; // Add this line
 }
 
 export interface IReview {
