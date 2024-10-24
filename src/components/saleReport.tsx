@@ -100,18 +100,21 @@ const SaleReport: React.FC = () => {
   const [endDate, setEndDate] = useState('');
   const navigate = useNavigate();
   const { isVisible, scrollToTop } = useScrollToTop();
+  const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
+    // const today = new Date().toISOString().split('T')[0];
     setStartDate(today);
     setEndDate(today);
     dispatch(fetchSalesReport({ startDate: today, endDate: today }));
   }, [dispatch]);
 
   const handleFetchSales = () => {
-    if (startDate && endDate) {
-      dispatch(fetchSalesReport({ startDate, endDate }));
+    if (startDate > endDate) {
+      alert('Start date cannot be after end date.');
+      return;
     }
+    dispatch(fetchSalesReport({ startDate, endDate }));
   };
 
   if (loading) return <Loading />;
@@ -134,6 +137,7 @@ const SaleReport: React.FC = () => {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             required
+            max={today}
           />
         </label>
         <label>
@@ -143,6 +147,8 @@ const SaleReport: React.FC = () => {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             required
+            min={startDate}
+            max={today}
           />
         </label>
         <Button onClick={handleFetchSales}>Fetch Sales</Button>

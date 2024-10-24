@@ -129,13 +129,19 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const error = useSelector((state: RootState) => state.auth.error);
 
+
+  const handleLoginSuccess = (user: any) => {
+    dispatch(getCart({ userId: user.user.id }));
+    dispatch(initializeOrders(user.token));
+    navigate('/');
+  };
+  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const user = await dispatch(login({ email, password })).unwrap();
-      dispatch(getCart({ userId: user.user.id }));
-      dispatch(initializeOrders(user.token));
-      navigate('/');
+      handleLoginSuccess(user);
     } catch (err) {
       console.error('Failed to login:', err);
     }

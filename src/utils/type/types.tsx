@@ -38,6 +38,14 @@ export interface IAuthResponse {
   user: IUser;
 }
 
+export interface ISignupResponse {
+  userName: string;  
+  email: string;
+  isAdmin: boolean;  
+  token?: string;    
+}
+
+
 export interface ICredentials {
   name?: string;
   email: string;
@@ -96,11 +104,6 @@ export interface IProductWithoutId {
   };
 }
 
-// interface IProductResponse{
-//   products:IProduct[];
-//   totalProducts:number;
-// }
-
 export interface IProductState {
   products: IProduct[];
   adminProductsHistory: IProduct[];
@@ -108,10 +111,6 @@ export interface IProductState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string;
   productId: number;
-  // pageNumber: number;
-  pageSize: number;
-  totalProducts: number; // Add this line
-  currentPage: number; // Add this line
 }
 
 export interface IReview {

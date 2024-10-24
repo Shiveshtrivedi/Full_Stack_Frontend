@@ -163,8 +163,14 @@ const SignupForm: React.FC = () => {
     if (!validateForm()) return;
 
     try {
-      await dispatch(signup(formData)).unwrap();
-      navigate('/login');
+      await dispatch(signup(formData))
+        .unwrap()
+        .then(() => {
+          navigate('/login');
+        })
+        .catch((error) => {
+          console.error('Signup failed:', error);
+        });
     } catch (err) {
       console.error('Failed to signup:', err);
     }

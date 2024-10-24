@@ -5,6 +5,9 @@ import {
   fetchUsers,
   deleteUser,
   updateUser,
+  updateUserInUserManagement,
+  deleteUserInUserManagement,
+  addUserInUserManagement,
 } from '../redux/slices/userManagementSlice';
 import { IUserForAdmin } from '../utils/type/types';
 import styled from 'styled-components';
@@ -12,6 +15,7 @@ import { IoArrowBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import useScrollToTop from '../hooks/useScrollToTop';
 import ScrollToTopButton from './scrollButton';
+import mqtt from 'mqtt';
 
 const Container = styled.div`
   max-width: 900px;
@@ -201,6 +205,65 @@ const UserManagement: React.FC = () => {
   const handleDeleteClick = (userId: number) => {
     dispatch(deleteUser(userId));
   };
+
+  useEffect(() => {
+    const client = mqtt.connect('ws://localhost:9001');
+
+    client.on('connect', () => {
+      client.subscribe('inventory-updates', (err) => {
+        if (err) {
+          console.error('Subscription error for inventory/updates:', err);
+        }
+      });
+
+      client.subscribe('order/update', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('product/new', (err) => {
+        if (err) {
+          console.error('Subscription error for product/new:', err);
+        }
+      });
+      client.subscribe('user/new', (err) => {
+        if (err) {
+          console.error('Subscription error for user/new :', err);
+        }
+      });
+      client.subscribe('user/delete', (err) => {
+        if (err) {
+          console.error('Subscription error for user/delete :', err);
+        }
+      });
+      client.subscribe('user/update', (err) => {
+        if (err) {
+          console.error('Subscription error for user/update :', err);
+        }
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        if (topic === 'user/new') {
+          dispatch(addUserInUserManagement(data));
+        }
+        if (topic === 'user/delete') {
+          dispatch(deleteUserInUserManagement(data.userId));
+        }
+        if (topic === 'user/update') {
+          dispatch(updateUserInUserManagement(data));
+        }
+      } catch (error) {
+        console.error('Failed to parse message:', error);
+      }
+    });
+
+    return () => {
+      client.end();
+    };
+  }, [dispatch]);
 
   return (
     <Container>

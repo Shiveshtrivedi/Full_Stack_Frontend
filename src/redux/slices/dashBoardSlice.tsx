@@ -68,6 +68,9 @@ const dashboardSlice = createSlice({
     updateSales: (state, action: PayloadAction<ISale>) => {
       state.sales.push(action.payload);
     },
+    updateProductList: (state, action: PayloadAction<Product>) => {
+      state.products.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -95,5 +98,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { updateInventory, updateSales } = dashboardSlice.actions;
+export const { updateInventory, updateSales, updateProductList } =
+  dashboardSlice.actions;
 export default dashboardSlice.reducer;

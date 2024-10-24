@@ -146,7 +146,7 @@ const AdminHistoryPage: React.FC = () => {
               />
               <ProductDetails>
                 <ProductTitle>{product.productName}</ProductTitle>
-                <ProductPrice>${product.price.toFixed(2)}</ProductPrice>
+                <ProductPrice> &#8377; {product.price.toFixed(2)}</ProductPrice>
               </ProductDetails>
               <ActionButton
                 onClick={() => handleRemoveProduct(product.historyId)}

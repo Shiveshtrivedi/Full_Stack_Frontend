@@ -105,7 +105,7 @@ const OrderHistoryPage: React.FC = () => {
               {order.transctionId}
             </OrderDetails>
             <OrderDetails>
-              <strong>Total Amount:</strong> ${' '}
+              <strong>Total Amount:</strong> &#8377;{' '}
               {(order.orderDetails || [])
                 .reduce((total, item) => total + item.price * item.quantity, 0)
                 .toFixed(2)}

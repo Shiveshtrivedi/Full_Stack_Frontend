@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import React, { useEffect } from 'react';
 import {
   fetchDashboardData,
-  updateInventory,
+  updateProductList,
   updateSales,
 } from '../redux/slices/dashBoardSlice';
 import Loading from './loading';
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useScrollToTop from '../hooks/useScrollToTop';
 import ScrollToTopButton from './scrollButton';
+import { updateInventory } from '../redux/slices/dashBoardSlice'; 
 
 const Container = styled.div`
   max-width: 1200px;
@@ -158,6 +159,11 @@ const AdminDashboard = () => {
           console.error('Subscription error for order/update:', err);
         }
       });
+      client.subscribe('product/new', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
     });
 
     client.on('message', (topic, message) => {
@@ -166,6 +172,10 @@ const AdminDashboard = () => {
 
         if (topic === 'inventory-updates') {
           dispatch(updateInventory(data));
+        }
+
+        if (topic === 'product/new') {
+          dispatch(updateProductList(data));
         }
 
         if (topic === 'sales-updates') {
