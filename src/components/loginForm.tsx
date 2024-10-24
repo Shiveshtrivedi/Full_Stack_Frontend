@@ -129,13 +129,11 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const error = useSelector((state: RootState) => state.auth.error);
 
-
   const handleLoginSuccess = (user: any) => {
     dispatch(getCart({ userId: user.user.id }));
     dispatch(initializeOrders(user.token));
     navigate('/');
   };
-  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

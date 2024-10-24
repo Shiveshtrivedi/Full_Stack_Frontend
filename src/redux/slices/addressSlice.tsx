@@ -5,7 +5,7 @@ import { api } from './authSlice';
 const initialState: IAddressState = {
   address: null,
   loading: false,
-  error: null,
+  error: '',
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
@@ -67,14 +67,14 @@ const addressSlice = createSlice({
     resetAddress(state) {
       state.address = null;
       state.loading = false;
-      state.error = null;
+      state.error = '';
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(postAddress.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(postAddress.fulfilled, (state, action) => {
         state.loading = false;
@@ -86,7 +86,7 @@ const addressSlice = createSlice({
       })
       .addCase(getAddresses.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(getAddresses.fulfilled, (state, action) => {
         state.loading = false;
@@ -98,7 +98,7 @@ const addressSlice = createSlice({
       })
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateAddress.fulfilled, (state, action) => {
         state.loading = false;

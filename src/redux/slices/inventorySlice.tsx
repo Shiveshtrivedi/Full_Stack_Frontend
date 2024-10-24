@@ -9,7 +9,7 @@ import { api } from './authSlice';
 const initialState: InventoryState = {
   items: [],
   loading: false,
-  error: null,
+  error: '',
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
@@ -54,7 +54,7 @@ const inventorySlice = createSlice({
     builder
       .addCase(fetchInventory.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(fetchInventory.fulfilled, (state, action) => {
         state.loading = false;
@@ -66,7 +66,7 @@ const inventorySlice = createSlice({
       })
       .addCase(addInventoryItem.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(addInventoryItem.fulfilled, (state, action) => {
         const newItems: InventoryItem[] = action.payload;
@@ -91,11 +91,11 @@ const inventorySlice = createSlice({
       })
       .addCase(updateStock.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateStock.fulfilled, (state) => {
         state.loading = false;
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateStock.rejected, (state, action) => {
         state.loading = false;

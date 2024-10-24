@@ -114,7 +114,6 @@ const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    
     addProductToHistory(state, action: PayloadAction<IProduct>) {
       const updatedHistory = [...state.adminProductsHistory, action.payload];
       state.adminProductsHistory = updatedHistory;
@@ -149,8 +148,10 @@ const productSlice = createSlice({
       console.log('updated products', JSON.stringify(updatedProducts));
       state.products = updatedProducts;
     },
-    deleteProductInProductManagement:(state,action)=>{
-        state.products = state.products.filter((product)=>product.productId!==action.payload)
+    deleteProductInProductManagement: (state, action) => {
+      state.products = state.products.filter(
+        (product) => product.productId !== action.payload
+      );
     },
     updateProductInUserManagement: (state, action) => {
       // Find the index of the product to update
@@ -284,7 +285,7 @@ export const {
   resetFilter,
   updateInventoryInProduct,
   updateProductInUserManagement,
-  deleteProductInProductManagement
+  deleteProductInProductManagement,
 } = productSlice.actions;
 
 export default productSlice.reducer;

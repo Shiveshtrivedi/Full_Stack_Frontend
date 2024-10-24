@@ -46,7 +46,7 @@ const initialState: DashboardState = {
   revenue: [],
   orders: [],
   loading: false,
-  error: null,
+  error: '',
 };
 
 const dashboardSlice = createSlice({

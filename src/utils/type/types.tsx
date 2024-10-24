@@ -21,7 +21,7 @@ export interface IUserForAdmin {
 export interface IUserManagementState {
   users: IUserForAdmin[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface IAuthState {
@@ -39,12 +39,11 @@ export interface IAuthResponse {
 }
 
 export interface ISignupResponse {
-  userName: string;  
+  userName: string;
   email: string;
-  isAdmin: boolean;  
-  token?: string;    
+  isAdmin: boolean;
+  token?: string;
 }
-
 
 export interface ICredentials {
   name?: string;
@@ -59,7 +58,7 @@ export interface ICartItem {
   items: Array<{
     productId: number;
     productName: string;
-    quantity: number | undefined;
+    quantity: number;
     imageUrl: string;
     price: number;
   }>;
@@ -267,7 +266,7 @@ export interface IAddress {
 export interface IAddressState {
   address: IAddress[] | null;
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface ISale {
@@ -354,7 +353,7 @@ export interface DashboardState {
   orders: IOrder[];
   revenue: Revenue[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface DashboardData {
@@ -375,7 +374,7 @@ export interface InventoryItem {
 export interface InventoryState {
   items: InventoryItem[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface UpdateStockItem {

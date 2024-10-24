@@ -13,13 +13,15 @@ import SaleLineChart from './chart_component/saleLineChart';
 import CategoryPieChart from './chart_component/categoryPieChart';
 import UserDemographicsPieChart from './chart_component/userDemographicsPieChart';
 import styled from 'styled-components';
-import mqtt from 'mqtt';
+// import mqtt from 'mqtt';
 import RevenueLineChart from './chart_component/revenueLineChart';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useScrollToTop from '../hooks/useScrollToTop';
 import ScrollToTopButton from './scrollButton';
-import { updateInventory } from '../redux/slices/dashBoardSlice'; 
+import { updateInventory } from '../redux/slices/dashBoardSlice';
+import { useMQTT } from '../hooks/useMQTT';
+// import mqtt from 'mqtt';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -140,56 +142,80 @@ const AdminDashboard = () => {
     dispatch(fetchDashboardData());
   }, [dispatch]);
 
-  useEffect(() => {
-    const client = mqtt.connect('ws://localhost:9001');
+  // useEffect(() => {
+  //   const client = mqtt.connect('ws://localhost:9001');
 
-    client.on('connect', () => {
-      client.subscribe('inventory-updates', (err) => {
-        if (err) {
-          console.error('Subscription error for inventory/updates:', err);
-        }
-      });
-      client.subscribe('sales-updates', (err) => {
-        if (err) {
-          console.error('Subscription error for sales-updates:', err);
-        }
-      });
-      client.subscribe('order/update', (err) => {
-        if (err) {
-          console.error('Subscription error for order/update:', err);
-        }
-      });
-      client.subscribe('product/new', (err) => {
-        if (err) {
-          console.error('Subscription error for order/update:', err);
-        }
-      });
-    });
+  //   client.on('connect', () => {
+  //     client.subscribe('inventory-updates', (err) => {
+  //       if (err) {
+  //         console.error('Subscription error for inventory/updates:', err);
+  //       }
+  //     });
+  //     client.subscribe('sales-updates', (err) => {
+  //       if (err) {
+  //         console.error('Subscription error for sales-updates:', err);
+  //       }
+  //     });
+  //     client.subscribe('order/update', (err) => {
+  //       if (err) {
+  //         console.error('Subscription error for order/update:', err);
+  //       }
+  //     });
+  //     client.subscribe('product/new', (err) => {
+  //       if (err) {
+  //         console.error('Subscription error for order/update:', err);
+  //       }
+  //     });
+  //   });
 
-    client.on('message', (topic, message) => {
-      try {
-        const data = JSON.parse(message.toString());
+  //   client.on('message', (topic, message) => {
+  //     try {
+  //       const data = JSON.parse(message.toString());
 
-        if (topic === 'inventory-updates') {
-          dispatch(updateInventory(data));
-        }
+  //       if (topic === 'inventory-updates') {
+  //         dispatch(updateInventory(data));
+  //       }
 
-        if (topic === 'product/new') {
-          dispatch(updateProductList(data));
-        }
+  //       if (topic === 'product/new') {
+  //         dispatch(updateProductList(data));
+  //       }
 
-        if (topic === 'sales-updates') {
-          dispatch(updateSales(data));
-        }
-      } catch (error) {
-        console.error('Failed to parse message:', error);
-      }
-    });
+  //       if (topic === 'sales-updates') {
+  //         dispatch(updateSales(data));
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to parse message:', error);
+  //     }
+  //   });
 
-    return () => {
-      client.end();
-    };
-  }, [dispatch]);
+  //   return () => {
+  //     client.end();
+  //   };
+  // }, [dispatch]);
+
+  useMQTT([
+    {
+      topic: 'inventory-updates',
+      onMessage: (message) => {
+        const data = JSON.parse(message);
+        dispatch(updateInventory(data));
+      },
+    },
+    {
+      topic: 'sales-updates',
+      onMessage: (message) => {
+        const data = JSON.parse(message);
+        dispatch(updateSales(data));
+      },
+    },
+    {
+      topic: 'product/new',
+      onMessage: (message) => {
+        const data = JSON.parse(message);
+        dispatch(updateProductList(data));
+      },
+    },
+  ]);
 
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;

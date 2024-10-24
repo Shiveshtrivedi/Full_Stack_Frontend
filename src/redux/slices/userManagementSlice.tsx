@@ -49,7 +49,7 @@ export const deleteUser = createAsyncThunk<
 const initialState: IUserManagementState = {
   users: [],
   loading: false,
-  error: null as string | null,
+  error: '',
 };
 
 const userManagementSlice = createSlice({
@@ -59,17 +59,21 @@ const userManagementSlice = createSlice({
     addUserInUserManagement: (state, action) => {
       state.users.push(action.payload);
     },
-    deleteUserInUserManagement:(state,action)=>{
-      state.users = state.users.filter((user)=>action.payload!==user.userId)
+    deleteUserInUserManagement: (state, action) => {
+      state.users = state.users.filter(
+        (user) => action.payload !== user.userId
+      );
     },
-    updateUserInUserManagement:(state,action)=>{
-      const index = state.users.findIndex((user) => user.userId === action.payload.userId);
+    updateUserInUserManagement: (state, action) => {
+      const index = state.users.findIndex(
+        (user) => user.userId === action.payload.userId
+      );
       if (index !== -1) {
         state.users[index].userName = action.payload.userName;
         state.users[index].email = action.payload.email;
         state.users[index].isAdmin = action.payload.isAdmin;
       }
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -99,5 +103,9 @@ const userManagementSlice = createSlice({
   },
 });
 
-export const {addUserInUserManagement, updateUserInUserManagement,deleteUserInUserManagement } = userManagementSlice.actions;
+export const {
+  addUserInUserManagement,
+  updateUserInUserManagement,
+  deleteUserInUserManagement,
+} = userManagementSlice.actions;
 export default userManagementSlice.reducer;
