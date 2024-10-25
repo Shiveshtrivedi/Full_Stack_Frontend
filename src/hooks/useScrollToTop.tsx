@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const useScrollToTop = (threshold: number = 300) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const toggleVisibility = () => {
+  const toggleVisibility = useCallback(() => {
     if (window.pageYOffset > threshold) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
     }
-  };
+  }, [threshold]);
 
   const scrollToTop = () => {
     window.scrollTo({
