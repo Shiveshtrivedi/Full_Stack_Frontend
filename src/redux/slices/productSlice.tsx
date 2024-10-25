@@ -164,7 +164,7 @@ const productSlice = createSlice({
         const updatedProduct = {
           ...productToUpdate,
           productName:
-            action.payload.productName ?? productToUpdate.productName, 
+            action.payload.productName ?? productToUpdate.productName,
           productDescription:
             action.payload.productDescription ??
             productToUpdate.productDescription,

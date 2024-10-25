@@ -22,7 +22,6 @@ const ScrollButton = styled(FaArrowUp)<{ visible: boolean }>`
   }
 `;
 
-
 const ScrollToTopButton: React.FC<IScrollButtonProps> = ({
   visible,
   onClick,

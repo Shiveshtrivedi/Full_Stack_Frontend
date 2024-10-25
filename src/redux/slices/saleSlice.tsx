@@ -40,14 +40,20 @@ const salesSlice = createSlice({
       .addCase(fetchSalesReport.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchSalesReport.fulfilled, (state, action:PayloadAction<ISale[]>) => {
-        state.sales = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchSalesReport.rejected, (state, action: PayloadAction<string | undefined>) => {
-        state.error = action.payload as string;
-        state.loading = false;
-      });
+      .addCase(
+        fetchSalesReport.fulfilled,
+        (state, action: PayloadAction<ISale[]>) => {
+          state.sales = action.payload;
+          state.loading = false;
+        }
+      )
+      .addCase(
+        fetchSalesReport.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload as string;
+          state.loading = false;
+        }
+      );
   },
 });
 

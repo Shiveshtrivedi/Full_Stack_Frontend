@@ -103,11 +103,10 @@ const SaleReport: React.FC = () => {
   const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
-    // const today = new Date().toISOString().split('T')[0];
     setStartDate(today);
     setEndDate(today);
     dispatch(fetchSalesReport({ startDate: today, endDate: today }));
-  }, [dispatch]);
+  }, [dispatch, today]);
 
   const handleFetchSales = () => {
     if (startDate > endDate) {

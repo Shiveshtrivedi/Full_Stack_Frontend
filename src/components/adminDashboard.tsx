@@ -193,7 +193,6 @@ const AdminDashboard = () => {
     };
   }, [dispatch]);
 
-
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
 

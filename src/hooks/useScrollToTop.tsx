@@ -24,7 +24,7 @@ const useScrollToTop = (threshold: number = 300) => {
     return () => {
       window.removeEventListener('scroll', toggleVisibility);
     };
-  }, [threshold]);
+  }, [threshold, toggleVisibility]);
 
   return { isVisible, scrollToTop };
 };

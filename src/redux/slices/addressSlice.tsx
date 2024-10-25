@@ -95,13 +95,10 @@ const addressSlice = createSlice({
           state.address = action.payload;
         }
       )
-      .addCase(
-        getAddresses.rejected,
-        (state, action) => {
-          state.loading = false;
-          state.error = action.payload as string ?? 'Failed to fetch addresses';
-        }
-      )
+      .addCase(getAddresses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) ?? 'Failed to fetch addresses';
+      })
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;
         state.error = '';

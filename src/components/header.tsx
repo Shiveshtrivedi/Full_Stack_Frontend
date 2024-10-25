@@ -87,7 +87,7 @@ const CartItems = styled.span`
   position: absolute;
   top: -3px;
   right: 0px;
-  background-color: #FF0000;
+  background-color: #ff0000;
   color: #fefefe;
   border-radius: 50%;
   padding: 4px 6px;
