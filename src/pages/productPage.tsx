@@ -6,7 +6,6 @@ import ReviewList from '../components/reviewList';
 import ReviewForm from '../components/reviewForm';
 import { fetchReviews } from '../redux/slices/userReviewSlice';
 import { AppDispatch, RootState } from '../redux/store';
-// import { fetchProducts } from '../redux/slices/productSlice';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import Star from '../components/star';

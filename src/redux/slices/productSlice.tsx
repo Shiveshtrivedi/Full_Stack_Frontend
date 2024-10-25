@@ -154,20 +154,17 @@ const productSlice = createSlice({
       );
     },
     updateProductInUserManagement: (state, action) => {
-      // Find the index of the product to update
       const productIndex = state.products.findIndex(
         (product) => product.productId === action.payload.productId
       );
 
-      // If the product exists, update its fields
       if (productIndex !== -1) {
         const productToUpdate = state.products[productIndex];
 
-        // Manually update the fields
         const updatedProduct = {
           ...productToUpdate,
           productName:
-            action.payload.productName ?? productToUpdate.productName, // If not provided, keep the old value
+            action.payload.productName ?? productToUpdate.productName, 
           productDescription:
             action.payload.productDescription ??
             productToUpdate.productDescription,
@@ -176,7 +173,6 @@ const productSlice = createSlice({
           category: action.payload.category ?? productToUpdate.category,
         };
 
-        // Update the state with the new product
         state.products[productIndex] = updatedProduct;
       }
     },

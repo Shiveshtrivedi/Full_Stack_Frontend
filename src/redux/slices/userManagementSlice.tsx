@@ -80,16 +80,16 @@ const userManagementSlice = createSlice({
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
+      .addCase(fetchUsers.fulfilled, (state, action:PayloadAction<IUserForAdmin[]>) => {
         state.users = action.payload;
         state.loading = false;
       })
-      .addCase(fetchUsers.rejected, (state, action) => {
+      .addCase(fetchUsers.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.error = action.payload ?? '';
         state.loading = false;
       })
 
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action:PayloadAction<IUserForAdmin>) => {
         const updatedUserIndex = state.users.findIndex(
           (u) => u.userId === action.payload.userId
         );

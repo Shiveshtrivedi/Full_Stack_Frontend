@@ -385,3 +385,20 @@ export interface UpdateStockItem {
 export interface UpdateStockRequest {
   products: UpdateStockItem[];
 }
+
+export interface ISearchBarProps {
+  categoryFilter: TCategoryFilter;
+  priceFilter: TPriceFilter;
+  ratingFilter: TRatingFilter;
+  handleCategoryFilterChange: (category: TCategoryFilter) => void;
+  handlePriceFilterChange: (filter: TPriceFilter) => void;
+  handleRatingFilterChange: (filter: TRatingFilter) => void;
+  handleResetFilters: () => void;
+  viewMode: 'grid' | 'list';
+  handleToggleViewMode: () => void;
+}
+
+export interface IScrollButtonProps {
+  visible: boolean;
+  onClick: () => void;
+}

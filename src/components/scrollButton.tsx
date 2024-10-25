@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaArrowUp } from 'react-icons/fa';
+import { IScrollButtonProps } from '../utils/type/types';
 
 const ScrollButton = styled(FaArrowUp)<{ visible: boolean }>`
   position: fixed;
@@ -21,12 +22,8 @@ const ScrollButton = styled(FaArrowUp)<{ visible: boolean }>`
   }
 `;
 
-interface ScrollButtonProps {
-  visible: boolean;
-  onClick: () => void;
-}
 
-const ScrollToTopButton: React.FC<ScrollButtonProps> = ({
+const ScrollToTopButton: React.FC<IScrollButtonProps> = ({
   visible,
   onClick,
 }) => {

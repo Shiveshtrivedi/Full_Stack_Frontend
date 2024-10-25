@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   IProduct,
   IWishListItem,
@@ -60,7 +60,7 @@ const wishListSlice = createSlice({
         state.loading = true;
         state.error = '';
       })
-      .addCase(getWishlist.fulfilled, (state, action) => {
+      .addCase(getWishlist.fulfilled, (state, action:PayloadAction<IWishListItem[]>) => {
         state.loading = false;
         state.items = action.payload;
       })

@@ -41,7 +41,6 @@ export const useMQTT = (topics: TopicHandler[]) => {
       }
     });
 
-    // Handle client disconnection or errors
     client.on('error', (error) => {
       console.error('MQTT connection error:', error);
     });

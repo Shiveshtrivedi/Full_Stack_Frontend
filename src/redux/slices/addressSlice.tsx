@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { IAddress, IAddressState } from '../../utils/type/types';
 import { api } from './authSlice';
 
@@ -19,9 +19,9 @@ export const getAddresses = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response.data.message || 'Failed to fetch addresses'
-      );
+      const rejectValue =
+        error.response.data.message || 'Failed to fetch addresses';
+      return rejectWithValue(rejectValue);
     }
   }
 );
@@ -88,14 +88,20 @@ const addressSlice = createSlice({
         state.loading = true;
         state.error = '';
       })
-      .addCase(getAddresses.fulfilled, (state, action) => {
-        state.loading = false;
-        state.address = action.payload;
-      })
-      .addCase(getAddresses.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      .addCase(
+        getAddresses.fulfilled,
+        (state, action: PayloadAction<IAddress[]>) => {
+          state.loading = false;
+          state.address = action.payload;
+        }
+      )
+      .addCase(
+        getAddresses.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload as string ?? 'Failed to fetch addresses';
+        }
+      )
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;
         state.error = '';
