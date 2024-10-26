@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { IProductWithoutId, TCategoryFilter } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
 import { addInventoryItem } from '../redux/slices/inventorySlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const FormContainer = styled.div`
   padding: 20px;

@@ -66,10 +66,50 @@ const dashboardSlice = createSlice({
       state.products = updatedProducts;
     },
     updateSales: (state, action: PayloadAction<ISale>) => {
-      state.sales.push(action.payload);
+      if (!action.payload) {
+        console.error('Payload is undefined or null');
+        return;
+      }
+
+      const { saleDate, totalProductsSold } = action.payload;
+      const actionDate = action.payload.saleDate.split('T')[0];
+      console.log('sale date is ', saleDate);
+      console.log('saledata', JSON.stringify(state.sales));
+
+      const existingSaleIndex = state.sales.findIndex(
+        (sale) => sale.saleDate === `${actionDate}T00:00:00`
+      );
+      console.log('existing date', existingSaleIndex);
+
+      console.log('existing saledate', state.sales[existingSaleIndex].saleDate);
+
+      if (existingSaleIndex !== -1) {
+        console.log(
+          'Total products sold before update: ',
+          state.sales[existingSaleIndex].totalProductsSold,
+          'Index: ',
+          existingSaleIndex,
+          'product sold',
+          totalProductsSold
+        );
+        state.sales[existingSaleIndex].totalProductsSold =
+          state.sales[existingSaleIndex].totalProductsSold + totalProductsSold;
+      } else {
+        state.sales.push(action.payload);
+      }
     },
     updateProductList: (state, action: PayloadAction<Product>) => {
       state.products.push(action.payload);
+    },
+    updateRevenue: (state, action) => {
+      const actionDate = action.payload.saleDate.split('T')[0];
+      const existingRevenueIndex = state.revenue.findIndex(
+        (revenue) => revenue.date === `${actionDate}T00:00:00`
+      );
+      if (existingRevenueIndex !== -1) {
+        state.revenue[existingRevenueIndex].totalRevenue +=
+          action.payload.totalAmount;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -98,6 +138,10 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { updateInventory, updateSales, updateProductList } =
-  dashboardSlice.actions;
+export const {
+  updateInventory,
+  updateSales,
+  updateProductList,
+  updateRevenue,
+} = dashboardSlice.actions;
 export default dashboardSlice.reducer;

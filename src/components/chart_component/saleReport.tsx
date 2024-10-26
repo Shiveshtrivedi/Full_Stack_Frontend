@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import React, { useEffect, useState } from 'react';
-import { fetchSalesReport } from '../redux/slices/saleSlice';
-import Loading from './loading';
-import { ISale } from '../utils/type/types';
+import { fetchSalesReport } from '../../redux/slices/saleSlice';
+import Loading from '../ui/loading';
+import { ISale } from '../../utils/type/types';
 import styled from 'styled-components';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from './scrollButton';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
 
 const Container = styled.div`
   padding: 20px;
@@ -95,6 +95,8 @@ const SaleReport: React.FC = () => {
   const { sales, loading, error } = useSelector(
     (root: RootState) => root.saleReport
   );
+
+  console.log('sales data ', sales);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

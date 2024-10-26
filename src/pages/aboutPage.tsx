@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { getCart } from '../redux/slices/cartSlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const Container = styled.div`
   font-family: 'Arial', sans-serif;

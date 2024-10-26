@@ -4,9 +4,9 @@ import { AppDispatch, RootState } from '../redux/store';
 import { fetchOrdersByUserId } from '../redux/slices/orderSlice';
 import styled from 'styled-components';
 import { getCart } from '../redux/slices/cartSlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from '../components/scrollButton';
+import ScrollToTopButton from '../components/ui/scrollButton';
 
 const HistoryContainer = styled.div`
   padding: 20px;

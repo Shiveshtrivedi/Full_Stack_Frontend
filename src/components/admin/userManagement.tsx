@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import React, { useEffect, useState } from 'react';
 import {
   fetchUsers,
@@ -8,13 +8,13 @@ import {
   updateUserInUserManagement,
   deleteUserInUserManagement,
   addUserInUserManagement,
-} from '../redux/slices/userManagementSlice';
-import { IUserForAdmin } from '../utils/type/types';
+} from '../../redux/slices/userManagementSlice';
+import { IUserForAdmin } from '../../utils/type/types';
 import styled from 'styled-components';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from './scrollButton';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
 import mqtt from 'mqtt';
 
 const Container = styled.div`

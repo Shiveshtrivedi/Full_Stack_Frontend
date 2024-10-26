@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../redux/store';
-import { signup } from '../redux/slices/authSlice';
+import { AppDispatch, RootState } from '../../redux/store';
+import { signup } from '../../redux/slices/authSlice';
 import styled from 'styled-components';
 import {
   validateEmail,
   validatePassword,
-} from '../utils/validation/validation';
-import { IErrors, IFormData } from '../utils/type/types';
+} from '../../utils/validation/validation';
+import { IErrors, IFormData } from '../../utils/type/types';
 
 const SignupWrapper = styled.div`
   display: flex;

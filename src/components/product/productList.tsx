@@ -1,32 +1,32 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';
 import {
   deleteProduct,
   fetchProducts,
   resetFilter,
-} from '../redux/slices/productSlice';
+} from '../../redux/slices/productSlice';
 import { Link } from 'react-router-dom';
 import styled, { keyframes, css } from 'styled-components';
 import {
   addToWishlist,
   getWishlist,
   removeFromWishlist,
-} from '../redux/slices/wishlistSlice';
+} from '../../redux/slices/wishlistSlice';
 import { toast } from 'react-toastify';
-import { fetchAllReviews } from '../redux/slices/userReviewSlice';
-import { IProduct, EStatus } from '../utils/type/types';
+import { fetchAllReviews } from '../../redux/slices/userReviewSlice';
+import { IProduct, EStatus } from '../../utils/type/types';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import NoProductFound from './noProductFound';
-import Star from './star';
-import { useAddToCart } from '../hooks/useCart';
-import { useProductFilter } from '../hooks/useFilter';
-import Loading from './loading';
-import NetworkErrorPage from './networkError';
-import { getCart } from '../redux/slices/cartSlice';
+import NoProductFound from '../ui/noProductFound';
+import Star from '../ui/star';
+import { useAddToCart } from '../../hooks/useCart';
+import { useProductFilter } from '../../hooks/useFilter';
+import Loading from '../ui/loading';
+import NetworkErrorPage from '../ui/networkError';
+import { getCart } from '../../redux/slices/cartSlice';
 import SearchBar from './searchBar';
-import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from './scrollButton';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
 
 const Container = styled.div`
   display: flex;
@@ -78,6 +78,7 @@ const Price = styled.p`
     font-size: 14px;
   }
 `;
+
 const Button = styled.button<{ viewMode: string }>`
   flex-direction: ${(props) => (props.viewMode === 'grid' ? 'row' : 'column')};
   background-color: #4caf50;

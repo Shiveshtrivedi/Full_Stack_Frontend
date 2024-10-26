@@ -5,9 +5,9 @@ import { getWishlist, removeFromWishlist } from '../redux/slices/wishlistSlice';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { getCart } from '../redux/slices/cartSlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from '../components/scrollButton';
+import ScrollToTopButton from '../components/ui/scrollButton';
 
 const WishlistContainer = styled.div`
   padding: 20px;

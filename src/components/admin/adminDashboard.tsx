@@ -1,26 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import React, { useEffect } from 'react';
 import {
   fetchDashboardData,
   updateProductList,
   updateSales,
   updateInventory,
-} from '../redux/slices/dashBoardSlice';
-import Loading from './loading';
-import ProductBarChart from './chart_component/productBarChart';
-import UserBarChart from './chart_component/userBarChart';
-import SaleLineChart from './chart_component/saleLineChart';
-import CategoryPieChart from './chart_component/categoryPieChart';
-import UserDemographicsPieChart from './chart_component/userDemographicsPieChart';
+  updateRevenue,
+} from '../../redux/slices/dashBoardSlice';
+import Loading from '../ui/loading';
+import ProductBarChart from '../chart_component/productBarChart';
+import UserBarChart from '../chart_component/userBarChart';
+import SaleLineChart from '../chart_component/saleLineChart';
+import CategoryPieChart from '../chart_component/categoryPieChart';
+import UserDemographicsPieChart from '../chart_component/userDemographicsPieChart';
 import styled from 'styled-components';
-import RevenueLineChart from './chart_component/revenueLineChart';
+import RevenueLineChart from '../chart_component/revenueLineChart';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
-import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from './scrollButton';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
 // import { useMQTT } from '../hooks/useMQTT';
 import mqtt from 'mqtt';
+import {
+  addUserInUserManagement,
+  deleteUserInUserManagement,
+  updateUserInUserManagement,
+} from '../../redux/slices/userManagementSlice';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -165,6 +171,26 @@ const AdminDashboard = () => {
           console.error('Subscription error for order/update:', err);
         }
       });
+      client.subscribe('revenue-updates', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('user/new', (err) => {
+        if (err) {
+          console.error('Subscription error for user/new :', err);
+        }
+      });
+      client.subscribe('user/delete', (err) => {
+        if (err) {
+          console.error('Subscription error for user/delete :', err);
+        }
+      });
+      client.subscribe('user/update', (err) => {
+        if (err) {
+          console.error('Subscription error for user/update :', err);
+        }
+      });
     });
 
     client.on('message', (topic, message) => {
@@ -174,14 +200,27 @@ const AdminDashboard = () => {
         if (topic === 'inventory-updates') {
           dispatch(updateInventory(data));
         }
+        if (topic === 'revenue-updates') {
+          dispatch(updateRevenue(data));
+        }
 
         if (topic === 'product/new') {
-          console.log('datain dash', data);
           dispatch(updateProductList(data));
         }
 
         if (topic === 'sales-updates') {
+          console.log('data in dashboard ', data);
           dispatch(updateSales(data));
+        }
+        if (topic === 'user/new') {
+          console.log('data ', data);
+          dispatch(addUserInUserManagement(data));
+        }
+        if (topic === 'user/delete') {
+          dispatch(deleteUserInUserManagement(data.userId));
+        }
+        if (topic === 'user/update') {
+          dispatch(updateUserInUserManagement(data));
         }
       } catch (error) {
         console.error('Failed to parse message:', error);

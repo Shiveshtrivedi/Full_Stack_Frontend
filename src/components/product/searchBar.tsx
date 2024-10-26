@@ -6,10 +6,13 @@ import {
   TCategoryFilter,
   TPriceFilter,
   TRatingFilter,
-} from '../utils/type/types';
+} from '../../utils/type/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { selectSearchTerm, setSearchTerm } from '../redux/slices/searchSlice';
+import { AppDispatch, RootState } from '../../redux/store';
+import {
+  selectSearchTerm,
+  setSearchTerm,
+} from '../../redux/slices/searchSlice';
 
 const SearchForm = styled.form`
   display: flex;

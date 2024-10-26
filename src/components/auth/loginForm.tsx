@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../redux/slices/authSlice';
+import { login } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';
 import styled from 'styled-components';
-import { initializeOrders } from '../redux/slices/orderSlice';
-import { getCart } from '../redux/slices/cartSlice';
+import { initializeOrders } from '../../redux/slices/orderSlice';
+import { getCart } from '../../redux/slices/cartSlice';
 
 const LoginWrapper = styled.div`
   display: flex;

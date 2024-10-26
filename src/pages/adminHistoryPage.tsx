@@ -8,9 +8,9 @@ import {
   deleteAdminHistory,
   fetchProductHistory,
 } from '../redux/slices/adminHistorySlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from '../components/scrollButton';
+import ScrollToTopButton from '../components/ui/scrollButton';
 
 const PageContainer = styled.div`
   padding: 20px;

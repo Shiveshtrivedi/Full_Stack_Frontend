@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import Loading from '../components/loading';
-import ReviewList from '../components/reviewList';
-import ReviewForm from '../components/reviewForm';
+import Loading from '../components/ui/loading';
+import ReviewList from '../components/product/reviewList';
+import ReviewForm from '../components/product/reviewForm';
 import { fetchReviews } from '../redux/slices/userReviewSlice';
 import { AppDispatch, RootState } from '../redux/store';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
-import Star from '../components/star';
+import Star from '../components/ui/star';
 import { useAddToCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { IProduct } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
-import GoBackButton from '../components/goBackButton';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const Container = styled.div`
   max-width: 1200px;

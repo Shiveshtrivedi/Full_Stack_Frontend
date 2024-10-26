@@ -143,6 +143,7 @@ const cartSlice = createSlice({
           const updatedCart: ICartItem[] = action.payload;
 
           if (!updatedCart || updatedCart.length === 0) return;
+          
 
           state.items = updatedCart;
 

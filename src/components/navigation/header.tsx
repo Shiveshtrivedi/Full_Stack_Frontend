@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { RootState } from '../redux/store';
+import { RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { BsCart } from 'react-icons/bs';
 import { Link } from 'react-router-dom';

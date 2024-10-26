@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import {
   updateCartItem,
   clearCart,
   getCart,
   setCartItem,
-} from '../redux/slices/cartSlice';
+} from '../../redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { ICreateOrderRequest } from '../utils/type/types';
-import { createOrder } from '../redux/slices/orderSlice';
+import { ICreateOrderRequest } from '../../utils/type/types';
+import { createOrder } from '../../redux/slices/orderSlice';
 
 const CartContainer = styled.div`
   padding: 20px;

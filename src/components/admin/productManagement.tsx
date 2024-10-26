@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';
 import {
   updateProduct,
   deleteProduct,
@@ -8,15 +8,15 @@ import {
   updateInventoryInProduct,
   updateProductInUserManagement,
   deleteProductInProductManagement,
-} from '../redux/slices/productSlice';
-import { IProduct } from '../utils/type/types';
+} from '../../redux/slices/productSlice';
+import { IProduct } from '../../utils/type/types';
 import styled from 'styled-components';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import useScrollToTop from '../hooks/useScrollToTop';
-import ScrollToTopButton from './scrollButton';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
 import mqtt from 'mqtt';
-import { updateSales } from '../redux/slices/dashBoardSlice';
+import { updateSales } from '../../redux/slices/dashBoardSlice';
 
 const Container = styled.div`
   max-width: 1000px;
