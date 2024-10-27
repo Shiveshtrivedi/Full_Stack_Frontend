@@ -215,7 +215,7 @@ const ProductManagement: React.FC = () => {
     return () => {
       client.end();
     };
-  }, [dispatch]);
+  }, [dispatch,websocketUrl]);
 
   return (
     <Container>

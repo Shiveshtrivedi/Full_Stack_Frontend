@@ -51,5 +51,5 @@ export const useMQTT = (topics: TopicHandler[]) => {
         console.log('MQTT client disconnected');
       });
     };
-  }, [dispatch, topics]);
+  }, [dispatch, topics, websocketUrl]);
 };
