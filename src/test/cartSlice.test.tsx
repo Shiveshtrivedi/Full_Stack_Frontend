@@ -38,7 +38,6 @@ describe('cartSlice', () => {
     expect(state.items[0]).toEqual(mockCartItemsArray[0]);
   });
 
-
   it('should handle updating a cart item', async () => {
     store.dispatch(
       addToCart.fulfilled(mockCartItemsArray, '', {

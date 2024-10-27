@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IProduct } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
 import GoBackButton from '../components/navigation/goBackButton';
+import { fetchProducts } from '../redux/slices/productSlice';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -85,16 +86,16 @@ const ProductPage: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user.id);
   useEffect(() => {
     if (products.length === 0) {
-      // setLoading(true);
-      // dispatch(fetchProducts())
-      //   .unwrap()
-      //   .then(() => {
-      //     setLoading(false);
-      //   })
-      //   .catch(() => {
-      //     setError('Failed to fetch products');
-      //     setLoading(false);
-      //   });
+      setLoading(true);
+      dispatch(fetchProducts())
+        .unwrap()
+        .then(() => {
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Failed to fetch products');
+          setLoading(false);
+        });
     } else {
       setLoading(false);
     }

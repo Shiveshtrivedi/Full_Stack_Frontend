@@ -11,8 +11,9 @@ interface TopicHandler {
 export const useMQTT = (topics: TopicHandler[]) => {
   const dispatch = useDispatch<AppDispatch>();
 
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
   useEffect(() => {
-    const client = mqtt.connect('ws://localhost:9001', {
+    const client = mqtt.connect(`${websocketUrl}`, {
       reconnectPeriod: 1000,
     });
 

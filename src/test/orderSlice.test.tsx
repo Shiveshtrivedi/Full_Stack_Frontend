@@ -65,7 +65,6 @@ describe('Order Slice', () => {
   });
 
   it('should handle updateOrder', async () => {
-    // First, we need to fetch the orders
     (api.get as jest.Mock).mockResolvedValueOnce({ data: mockOrders });
     await store.dispatch(fetchOrdersByUserId(1));
 

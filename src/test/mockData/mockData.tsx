@@ -170,13 +170,13 @@ export const mockOrders: IOrder[] = [
 ];
 
 export const mockCreateOrderRequest: ICreateOrderRequest = {
-    userId: 1,
-    paymentMethod: 'Credit Card',
-    items: [
-      {
-        productId: 101,
-        quantity: 2,
-        price: 50.0,
-      },
-    ],
-  };
+  userId: 1,
+  paymentMethod: 'Credit Card',
+  items: [
+    {
+      productId: 101,
+      quantity: 2,
+      price: 50.0,
+    },
+  ],
+};

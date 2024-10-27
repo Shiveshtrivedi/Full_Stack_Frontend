@@ -156,10 +156,9 @@ const ProductManagement: React.FC = () => {
     dispatch(deleteProduct(productId));
   };
 
-  console.log('products', products);
-
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
   useEffect(() => {
-    const client = mqtt.connect('ws://localhost:9001');
+    const client = mqtt.connect(`${websocketUrl}`);
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {

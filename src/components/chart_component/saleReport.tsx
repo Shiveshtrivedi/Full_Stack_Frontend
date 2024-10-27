@@ -45,7 +45,7 @@ const DateInputs = styled.div`
 const Button = styled.button`
   padding: 10px 15px;
   background-color: #4caf50;
-  color: fefefe;
+  color: #fefefe;
   border: none;
   border-radius: 4px;
   cursor: pointer;

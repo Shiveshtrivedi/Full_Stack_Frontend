@@ -133,12 +133,6 @@ const productSlice = createSlice({
       state,
       action: PayloadAction<IUpdateProductStockPayload>
     ) => {
-      // const updatedProducts = state.products.map((product) =>
-      //   product.productId === action.payload.ProductId
-      //     ? { ...product, stock: action.payload.StockAvailable }
-      //     : product
-      // );
-
       const updatedProducts = state.products.map((product) =>
         product.productId === action.payload.ProductId
           ? { ...product, ...action.payload }

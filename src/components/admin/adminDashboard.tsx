@@ -20,7 +20,6 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import ScrollToTopButton from '../ui/scrollButton';
-// import { useMQTT } from '../hooks/useMQTT';
 import mqtt from 'mqtt';
 import {
   addUserInUserManagement,
@@ -147,8 +146,10 @@ const AdminDashboard = () => {
     dispatch(fetchDashboardData());
   }, [dispatch]);
 
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
+
   useEffect(() => {
-    const client = mqtt.connect('ws://localhost:9001');
+    const client = mqtt.connect(`${websocketUrl}`);
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {
