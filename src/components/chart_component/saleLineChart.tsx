@@ -91,7 +91,7 @@ const SaleLineChart = () => {
     return () => {
       client.end();
     };
-  }, [dispatch,websocketUrl]);
+  }, [dispatch, websocketUrl]);
 
   const chartData = {
     labels: labels,

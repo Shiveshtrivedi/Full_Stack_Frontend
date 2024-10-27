@@ -231,7 +231,7 @@ const AdminDashboard = () => {
     return () => {
       client.end();
     };
-  }, [dispatch,websocketUrl]);
+  }, [dispatch, websocketUrl]);
 
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
