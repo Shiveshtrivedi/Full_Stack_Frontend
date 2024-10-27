@@ -8,10 +8,21 @@ import {
 import { getOrdersFromCookies } from '../../utils/cookie/cookieUtils';
 import { api } from './authSlice';
 
+const ORDER_STORAGE_KEY = 'orders';
+
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
+const getOrdersFromLocalStorage = (): IOrder[] => {
+  const storedOrders = localStorage.getItem(ORDER_STORAGE_KEY);
+  return storedOrders ? JSON.parse(storedOrders) : [];
+};
+
+const saveOrdersToLocalStorage = (orders: IOrder[]): void => {
+  localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orders));
+};
+
 const initialState: IOrderState = {
-  orders: [],
+  orders: getOrdersFromLocalStorage(),
   orderView: null,
   userId: 0,
   loading: false,
@@ -73,6 +84,7 @@ const orderSlice = createSlice({
     initializeOrders(state, action: PayloadAction<string>) {
       const orders1 = getOrdersFromCookies(action.payload);
       state.orders = orders1 || [];
+      saveOrdersToLocalStorage(state.orders);
     },
   },
   extraReducers: (builder) => {
@@ -88,6 +100,7 @@ const orderSlice = createSlice({
       .addCase(fetchOrdersByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'failed';
+        saveOrdersToLocalStorage(state.orders);
       })
       .addCase(fetchOrderByOrderId.pending, (state) => {
         state.loading = true;
@@ -113,6 +126,7 @@ const orderSlice = createSlice({
         (state, action: PayloadAction<IOrder>) => {
           state.loading = false;
           state.orders.push(action.payload);
+          saveOrdersToLocalStorage(state.orders);
         }
       )
       .addCase(createOrder.rejected, (state, action) => {
@@ -132,6 +146,7 @@ const orderSlice = createSlice({
           );
           if (index !== -1) {
             state.orders[index] = action.payload;
+            saveOrdersToLocalStorage(state.orders);
           }
         }
       )

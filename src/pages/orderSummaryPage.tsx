@@ -127,12 +127,11 @@ const OrderSummary: React.FC = () => {
       <DetailsList>
         {order?.orderDetails.map((detail) => (
           <ListItem key={detail.productId}>
-            {detail.productName} - Quantity: {detail.quantity} - Price: $
+            {detail.productName} - Quantity: {detail.quantity} - Price: &#8377;
             {detail.price.toFixed(2)}
           </ListItem>
         ))}
       </DetailsList>
-
       <BackButton onClick={() => navigate(-1)}>Go Back</BackButton>
     </SummaryContainer>
   );

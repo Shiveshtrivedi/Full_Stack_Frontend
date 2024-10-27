@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import SideBar from './sideBar';
+import { RootState } from '../../redux/store';
+import SideBar from '../navigation/sideBar';
 import { RiMenuFold2Fill, RiMenuUnfold4Fill } from 'react-icons/ri';
-import { toggleSidebar } from '../redux/slices/adminLayoutSlice';
+import { toggleSidebar } from '../../redux/slices/adminLayoutSlice';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 

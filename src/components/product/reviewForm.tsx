@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { postReview } from '../redux/slices/userReviewSlice';
-import { AppDispatch, RootState } from '../redux/store';
+import { postReview } from '../../redux/slices/userReviewSlice';
+import { AppDispatch, RootState } from '../../redux/store';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { IReviewFormProps } from '../utils/type/types';
+import { IReviewFormProps } from '../../utils/type/types';
 
 const FormContainer = styled.div`
   max-width: 600px;

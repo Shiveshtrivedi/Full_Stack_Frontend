@@ -2,33 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaSearch } from 'react-icons/fa';
 import {
+  ISearchBarProps,
   TCategoryFilter,
   TPriceFilter,
   TRatingFilter,
-} from '../utils/type/types';
+} from '../../utils/type/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { selectSearchTerm, setSearchTerm } from '../redux/slices/searchSlice';
-
-interface SearchBarProps {
-  categoryFilter: TCategoryFilter;
-  priceFilter: TPriceFilter;
-  ratingFilter: TRatingFilter;
-  handleCategoryFilterChange: (category: TCategoryFilter) => void;
-  handlePriceFilterChange: (filter: TPriceFilter) => void;
-  handleRatingFilterChange: (filter: TRatingFilter) => void;
-  handleResetFilters: () => void;
-  viewMode: 'grid' | 'list';
-  handleToggleViewMode: () => void;
-}
+import { AppDispatch, RootState } from '../../redux/store';
+import {
+  selectSearchTerm,
+  setSearchTerm,
+} from '../../redux/slices/searchSlice';
 
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: fefefe;
   border-radius: 50px;
   padding: 10px 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px #00000020
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
@@ -37,6 +29,7 @@ const SearchForm = styled.form`
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 10px;
+    width: 90%;
   }
 `;
 
@@ -50,7 +43,7 @@ const SearchContainer = styled.div`
   margin-right: 10px;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     margin-bottom: 10px;
   }
 `;
@@ -75,10 +68,10 @@ const SearchButton = styled.button`
   cursor: pointer;
   font-size: 18px;
   padding: 10px;
-  color: black;
+  color: #000000;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 10%;
     justify-content: center;
   }
 `;
@@ -103,7 +96,7 @@ const ResetButton = styled.button`
   background: transparent;
   border: 1px solid #ccc;
   border-radius: 25px;
-  color: black;
+  color: #000000;
   padding: 5px 10px;
   cursor: pointer;
   margin-left: 10px;
@@ -117,7 +110,7 @@ const ViewModeButton = styled(ResetButton)`
   margin-left: 2px;
 `;
 
-const SearchBar: React.FC<SearchBarProps> = ({
+const SearchBar: React.FC<ISearchBarProps> = ({
   categoryFilter,
   handleCategoryFilterChange,
   priceFilter,
@@ -185,11 +178,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }
       >
         <option value="all">All Ratings</option>
-        <option value="1">1 Star</option>
-        <option value="2">2 Stars</option>
-        <option value="3">3 Stars</option>
-        <option value="4">4 Stars</option>
-        <option value="5">5 Stars</option>
+        <option value="1-star">1 Star</option>
+        <option value="2-star">2 Stars</option>
+        <option value="3-star">3 Stars</option>
+        <option value="4-star">4 Stars</option>
+        <option value="5-star">5 Stars</option>
       </FilterDropdown>
 
       <ResetButton

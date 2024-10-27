@@ -6,6 +6,7 @@ import {
   IAuthState,
   IAuthResponse,
   ICredentials,
+  ISignupResponse,
 } from '../../utils/type/types';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
@@ -33,7 +34,6 @@ export const api = axios.create({
   baseURL: API_URL,
 });
 
-// Interceptor to add the Authorization header
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -85,7 +85,7 @@ export const login = createAsyncThunk<
 });
 
 export const signup = createAsyncThunk<
-  IAuthResponse,
+  ISignupResponse,
   ICredentials,
   { rejectValue: string }
 >('auth/signup', async (credentials, { rejectWithValue }) => {
@@ -96,10 +96,7 @@ export const signup = createAsyncThunk<
       password: credentials.password,
     });
 
-    const user = response.data.user as IUser;
-    const token = response.data.token as string;
-
-    return { user, token };
+    return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
     return rejectWithValue(
@@ -146,7 +143,6 @@ const authSlice = createSlice({
           state.error = '';
           state.userEmail = action.payload.user.email;
           state.isAdmin = action.payload.user.isAdmin ?? false;
-          console.log('token', state.token);
         }
       )
       .addCase(
@@ -158,16 +154,18 @@ const authSlice = createSlice({
       .addCase(signup.pending, (state) => {
         state.error = '';
       })
-
       .addCase(
         signup.fulfilled,
-        (state, action: PayloadAction<IAuthResponse>) => {
-          state.isAuthenticated = true;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
+        (state, action: PayloadAction<ISignupResponse>) => {
+          state.user = {
+            ...state.user,
+            name: action.payload.userName,
+            email: action.payload.email,
+            isAdmin: action.payload.isAdmin,
+          };
+          state.userEmail = action.payload.email;
+          state.isAdmin = action.payload.isAdmin;
           state.error = '';
-          state.userEmail = action.payload.user.email;
-          localStorage.setItem('user', JSON.stringify(action.payload.user));
         }
       )
       .addCase(

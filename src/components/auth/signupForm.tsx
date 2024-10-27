@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../redux/store';
-import { signup } from '../redux/slices/authSlice';
+import { AppDispatch, RootState } from '../../redux/store';
+import { signup } from '../../redux/slices/authSlice';
 import styled from 'styled-components';
 import {
   validateEmail,
   validatePassword,
-} from '../utils/validation/validation';
-import { IErrors, IFormData } from '../utils/type/types';
+} from '../../utils/validation/validation';
+import { IErrors, IFormData } from '../../utils/type/types';
 
 const SignupWrapper = styled.div`
   display: flex;
@@ -163,8 +163,14 @@ const SignupForm: React.FC = () => {
     if (!validateForm()) return;
 
     try {
-      await dispatch(signup(formData)).unwrap();
-      navigate('/login');
+      await dispatch(signup(formData))
+        .unwrap()
+        .then(() => {
+          navigate('/login');
+        })
+        .catch((error) => {
+          console.error('Signup failed:', error);
+        });
     } catch (err) {
       console.error('Failed to signup:', err);
     }

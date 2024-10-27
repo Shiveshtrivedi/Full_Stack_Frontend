@@ -5,6 +5,9 @@ import { getWishlist, removeFromWishlist } from '../redux/slices/wishlistSlice';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { getCart } from '../redux/slices/cartSlice';
+import GoBackButton from '../components/navigation/goBackButton';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from '../components/ui/scrollButton';
 
 const WishlistContainer = styled.div`
   padding: 20px;
@@ -163,6 +166,7 @@ const WishlistPage: React.FC = () => {
   const wishListItems = useSelector((state: RootState) => state.wishList.items);
   const userId = useSelector((state: RootState) => state.auth.user.id);
   const userid = Number(userId);
+  const { isVisible, scrollToTop } = useScrollToTop(300);
 
   useEffect(() => {
     if (userId) {
@@ -173,6 +177,7 @@ const WishlistPage: React.FC = () => {
 
   return (
     <WishlistContainer>
+      <GoBackButton />
       <h1>Wishlist</h1>
       {wishListItems.length === 0 ? (
         <EmptyWishlistMessage>Your wishlist is empty.</EmptyWishlistMessage>
@@ -212,6 +217,7 @@ const WishlistPage: React.FC = () => {
           </WishlistItem>
         ))
       )}
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </WishlistContainer>
   );
 };

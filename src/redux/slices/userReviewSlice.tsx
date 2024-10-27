@@ -36,7 +36,8 @@ export const fetchReviews = createAsyncThunk<
     );
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response?.data || 'Failed to fetch reviews');
+    const errorMessage = error.response?.data || 'Failed to post review';
+    return rejectWithValue(errorMessage);
   }
 });
 
@@ -49,7 +50,7 @@ export const postReview = createAsyncThunk<
     const response = await api.post(`${API_URL}/review/addReview`, review);
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response?.data || 'Failed to post review');
+    return rejectWithValue(error.response.data || 'Failed to post review');
   }
 });
 
@@ -121,12 +122,9 @@ const reviewSlice = createSlice({
         }
       )
 
-      .addCase(
-        postReview.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.error = action.payload ?? 'Failed to post review';
-        }
-      )
+      .addCase(postReview.rejected, (state, action) => {
+        state.error = action.payload ?? 'Failed to post review';
+      })
       .addCase(fetchAllReviews.pending, (state) => {
         state.error = '';
       })

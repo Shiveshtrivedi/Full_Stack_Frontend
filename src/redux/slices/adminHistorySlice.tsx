@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAdminHistory, IAdminHistoryState } from '../../utils/type/types';
 import { api } from './authSlice';
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_USER_API_URL;
 
@@ -61,38 +62,55 @@ const adminHistorySlice = createSlice({
       .addCase(fetchProductHistory.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchProductHistory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || 'failed to fetch';
-      })
-      .addCase(fetchProductHistory.fulfilled, (state, action) => {
-        state.histories = action.payload;
-        state.loading = false;
-      })
+      .addCase(
+        fetchProductHistory.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || 'failed to fetch';
+        }
+      )
+      .addCase(
+        fetchProductHistory.fulfilled,
+        (state, action: PayloadAction<IAdminHistory[]>) => {
+          state.histories = action.payload;
+          state.loading = false;
+        }
+      )
       .addCase(deleteAdminHistory.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteAdminHistory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.histories = state.histories.filter(
-          (history) => history.historyId !== action.payload
-        );
-      })
-      .addCase(deleteAdminHistory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || 'Failed to delete history entry';
-      })
+      .addCase(
+        deleteAdminHistory.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.loading = false;
+          state.histories = state.histories.filter(
+            (history) => history.historyId !== action.payload
+          );
+          toast.error('Product removed from history');
+        }
+      )
+      .addCase(
+        deleteAdminHistory.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || 'Failed to delete history entry';
+        }
+      )
       .addCase(clearAdminHistory.pending, (state) => {
         state.loading = true;
       })
       .addCase(clearAdminHistory.fulfilled, (state) => {
         state.histories = [];
         state.loading = false;
+        toast.error('History Cleared');
       })
-      .addCase(clearAdminHistory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || 'Failed to clear history';
-      }),
+      .addCase(
+        clearAdminHistory.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || 'Failed to clear history';
+        }
+      ),
 });
 
 export default adminHistorySlice.reducer;

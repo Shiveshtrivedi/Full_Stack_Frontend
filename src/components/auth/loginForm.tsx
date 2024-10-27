@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../redux/slices/authSlice';
+import { login } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';
 import styled from 'styled-components';
-import { initializeOrders } from '../redux/slices/orderSlice';
-import { getCart } from '../redux/slices/cartSlice';
+import { initializeOrders } from '../../redux/slices/orderSlice';
+import { getCart } from '../../redux/slices/cartSlice';
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -129,13 +129,17 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const error = useSelector((state: RootState) => state.auth.error);
 
+  const handleLoginSuccess = (user: any) => {
+    dispatch(getCart({ userId: user.user.id }));
+    dispatch(initializeOrders(user.token));
+    navigate('/');
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const user = await dispatch(login({ email, password })).unwrap();
-      dispatch(getCart({ userId: user.user.id }));
-      dispatch(initializeOrders(user.token));
-      navigate('/');
+      handleLoginSuccess(user);
     } catch (err) {
       console.error('Failed to login:', err);
     }

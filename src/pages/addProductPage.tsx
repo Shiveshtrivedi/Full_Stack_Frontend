@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { addProduct } from '../redux/slices/productSlice';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { IProductWithoutId, TCategoryFilter } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
 import { addInventoryItem } from '../redux/slices/inventorySlice';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const FormContainer = styled.div`
   padding: 20px;
@@ -73,8 +73,9 @@ const SubmitButton = styled.button`
 const AddProductPage: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [costPrice, setCostPrice] = useState<string>('');
   const [price, setPrice] = useState<string>('');
-  const [stockUnit, setStockUnit] = useState<number>(0);
+  const [stockUnit, setStockUnit] = useState<number>();
   const [image, setImage] = useState<string>('');
   const [category, setCategory] = useState<TCategoryFilter>('electronics');
 
@@ -93,7 +94,9 @@ const AddProductPage: React.FC = () => {
       price: parseFloat(price),
       image,
       category,
-      stock: stockUnit,
+      stock: stockUnit ?? 0,
+      costPrice: parseFloat(costPrice),
+      sellingPrice: parseFloat(price),
     };
 
     try {
@@ -103,19 +106,20 @@ const AddProductPage: React.FC = () => {
 
       await dispatch(addInventoryItem(newProduct.productId));
 
-      toast.success('Product added successfully');
       setTitle('');
       setDescription('');
       setPrice('');
+      setCostPrice('');
+      setStockUnit(0);
       setImage('');
     } catch (error) {
       console.error('Error adding product or inventory:', error);
-      toast.error('Error occurred while adding product');
     }
   };
 
   return (
     <FormContainer>
+      <GoBackButton />
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Title</Label>
@@ -136,7 +140,18 @@ const AddProductPage: React.FC = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label>Price (in USD)</Label>
+          <Label>Cost Price (in &#8377;)</Label>
+          <Input
+            type="number"
+            value={costPrice}
+            onChange={(e) => setCostPrice(e.target.value)}
+            required
+            min="0"
+            step="0.01"
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Selling Price (in &#8377;)</Label>
           <Input
             type="number"
             value={price}
@@ -154,7 +169,7 @@ const AddProductPage: React.FC = () => {
             onChange={(e) => setStockUnit(Number(e.target.value))}
             required
             min="0"
-            step="0.01"
+            step="1"
           />
         </FormGroup>
         <FormGroup>

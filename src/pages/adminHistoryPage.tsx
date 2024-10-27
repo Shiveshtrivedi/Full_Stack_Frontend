@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import React, { useCallback, useEffect } from 'react';
 import { getCart } from '../redux/slices/cartSlice';
@@ -9,6 +8,9 @@ import {
   deleteAdminHistory,
   fetchProductHistory,
 } from '../redux/slices/adminHistorySlice';
+import GoBackButton from '../components/navigation/goBackButton';
+import useScrollToTop from '../hooks/useScrollToTop';
+import ScrollToTopButton from '../components/ui/scrollButton';
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -115,22 +117,22 @@ const AdminHistoryPage: React.FC = () => {
     (root: RootState) => root.adminHistory.histories
   );
 
+  const { isVisible, scrollToTop } = useScrollToTop();
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
   const handleRemoveProduct = (historyId: number) => {
     dispatch(deleteAdminHistory({ historyId }));
-    toast.error('Product removed from history');
   };
 
   const handleClearHistory = () => {
     dispatch(clearAdminHistory(userId));
-    toast.error('History Cleared');
   };
 
   return (
     <PageContainer>
+      <GoBackButton />
       <Header>Admin History Page</Header>
       {adminProductsHistory.length === 0 ? (
         <EmptyMessage>Your History Is Empty</EmptyMessage>
@@ -144,7 +146,7 @@ const AdminHistoryPage: React.FC = () => {
               />
               <ProductDetails>
                 <ProductTitle>{product.productName}</ProductTitle>
-                <ProductPrice>${product.price.toFixed(2)}</ProductPrice>
+                <ProductPrice> &#8377; {product.price.toFixed(2)}</ProductPrice>
               </ProductDetails>
               <ActionButton
                 onClick={() => handleRemoveProduct(product.historyId)}
@@ -162,6 +164,7 @@ const AdminHistoryPage: React.FC = () => {
           </ClearHistoryButton>
         </ProductList>
       )}
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </PageContainer>
   );
 };

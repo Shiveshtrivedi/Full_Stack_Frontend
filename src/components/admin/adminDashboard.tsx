@@ -1,21 +1,31 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import React, { useEffect } from 'react';
 import {
   fetchDashboardData,
-  updateInventory,
+  updateProductList,
   updateSales,
-} from '../redux/slices/dashBoardSlice';
-import Loading from './loading';
-import ProductBarChart from './chart_component/productBarChart';
-import UserBarChart from './chart_component/userBarChart';
-import SaleLineChart from './chart_component/saleLineChart';
-import CategoryPieChart from './chart_component/categoryPieChart';
-import UserDemographicsPieChart from './chart_component/userDemographicsPieChart';
+  updateInventory,
+  updateRevenue,
+} from '../../redux/slices/dashBoardSlice';
+import Loading from '../ui/loading';
+import ProductBarChart from '../chart_component/productBarChart';
+import UserBarChart from '../chart_component/userBarChart';
+import SaleLineChart from '../chart_component/saleLineChart';
+import CategoryPieChart from '../chart_component/categoryPieChart';
+import UserDemographicsPieChart from '../chart_component/userDemographicsPieChart';
 import styled from 'styled-components';
-import mqtt from 'mqtt';
-import RevenueLineChart from './chart_component/revenueLineChart';
+import RevenueLineChart from '../chart_component/revenueLineChart';
 import { useNavigate } from 'react-router-dom';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
+import mqtt from 'mqtt';
+import {
+  addUserInUserManagement,
+  deleteUserInUserManagement,
+  updateUserInUserManagement,
+} from '../../redux/slices/userManagementSlice';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -77,29 +87,29 @@ const StyledTable = styled.table`
   }
 
   tr:hover {
-    background-color: #e9ecef;
+    background-: #e9ecef;
   }
 `;
 
 const ViewButton = styled.button`
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #4caf50;
+  color: #fefefe;
   font-size: 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition:
-    background-color 0.3s ease,
+    background- 0.3s ease,
     transform 0.2s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-: #45a049;
     transform: scale(1.05);
   }
 
   &:active {
-    background-color: #004085;
+    background-: #004085;
     transform: scale(0.98);
   }
 
@@ -108,23 +118,38 @@ const ViewButton = styled.button`
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
   }
 `;
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
 
 const AdminDashboard = () => {
   const { users, products, sales, orders, loading, error } = useSelector(
     (state: RootState) => state.dashBoard
   );
 
-  console.log('orders', orders);
-
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { isVisible, scrollToTop } = useScrollToTop(300);
 
   useEffect(() => {
     dispatch(fetchDashboardData());
   }, [dispatch]);
 
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
+
   useEffect(() => {
-    const client = mqtt.connect('ws://localhost:9001');
+    const client = mqtt.connect(`${websocketUrl}`);
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {
@@ -142,6 +167,31 @@ const AdminDashboard = () => {
           console.error('Subscription error for order/update:', err);
         }
       });
+      client.subscribe('product/new', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('revenue-updates', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('user/new', (err) => {
+        if (err) {
+          console.error('Subscription error for user/new :', err);
+        }
+      });
+      client.subscribe('user/delete', (err) => {
+        if (err) {
+          console.error('Subscription error for user/delete :', err);
+        }
+      });
+      client.subscribe('user/update', (err) => {
+        if (err) {
+          console.error('Subscription error for user/update :', err);
+        }
+      });
     });
 
     client.on('message', (topic, message) => {
@@ -151,9 +201,27 @@ const AdminDashboard = () => {
         if (topic === 'inventory-updates') {
           dispatch(updateInventory(data));
         }
+        if (topic === 'revenue-updates') {
+          dispatch(updateRevenue(data));
+        }
+
+        if (topic === 'product/new') {
+          dispatch(updateProductList(data));
+        }
 
         if (topic === 'sales-updates') {
+          console.log('data in dashboard ', data);
           dispatch(updateSales(data));
+        }
+        if (topic === 'user/new') {
+          console.log('data ', data);
+          dispatch(addUserInUserManagement(data));
+        }
+        if (topic === 'user/delete') {
+          dispatch(deleteUserInUserManagement(data.userId));
+        }
+        if (topic === 'user/update') {
+          dispatch(updateUserInUserManagement(data));
         }
       } catch (error) {
         console.error('Failed to parse message:', error);
@@ -163,7 +231,7 @@ const AdminDashboard = () => {
     return () => {
       client.end();
     };
-  }, [dispatch]);
+  }, [dispatch, websocketUrl]);
 
   if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
@@ -174,6 +242,7 @@ const AdminDashboard = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>Admin Dashboard</Title>
       <Section>
         <ProductBarChart />
@@ -309,6 +378,7 @@ const AdminDashboard = () => {
           </tbody>
         </StyledTable>
       </Section>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </Container>
   );
 };

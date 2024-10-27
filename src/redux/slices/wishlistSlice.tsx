@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   IProduct,
   IWishListItem,
@@ -14,7 +14,6 @@ const initialState: IWishListState = {
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
-console.log('api url in user reive', API_URL);
 
 export const getWishlist = createAsyncThunk<IWishListItem[], number>(
   '/wishlist/items',
@@ -61,10 +60,13 @@ const wishListSlice = createSlice({
         state.loading = true;
         state.error = '';
       })
-      .addCase(getWishlist.fulfilled, (state, action) => {
-        state.loading = false;
-        state.items = action.payload;
-      })
+      .addCase(
+        getWishlist.fulfilled,
+        (state, action: PayloadAction<IWishListItem[]>) => {
+          state.loading = false;
+          state.items = action.payload;
+        }
+      )
       .addCase(getWishlist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch';
@@ -76,6 +78,7 @@ const wishListSlice = createSlice({
       .addCase(addToWishlist.fulfilled, (state, action) => {
         state.loading = false;
         state.items.push(action.payload);
+        toast.success(`Added to wishlist`);
       })
       .addCase(addToWishlist.rejected, (state, action) => {
         state.loading = false;

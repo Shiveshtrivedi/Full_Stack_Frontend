@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { getCart } from '../redux/slices/cartSlice';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const ContactContainer = styled.div`
   padding: 20px;
@@ -75,6 +76,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <ContactContainer>
+      <GoBackButton />
       <h1>Contact Us</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>

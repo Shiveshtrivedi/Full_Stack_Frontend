@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';
 import {
-  fetchProducts,
   updateProduct,
   deleteProduct,
-} from '../redux/slices/productSlice';
-import { IProduct } from '../utils/type/types';
+  fetchProducts,
+  updateInventoryInProduct,
+  updateProductInUserManagement,
+  deleteProductInProductManagement,
+} from '../../redux/slices/productSlice';
+import { IProduct } from '../../utils/type/types';
 import styled from 'styled-components';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
+import mqtt from 'mqtt';
+import { updateSales } from '../../redux/slices/dashBoardSlice';
 
 const Container = styled.div`
   max-width: 1000px;
@@ -90,6 +99,21 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
+
 const ProductManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector((root: RootState) => root.products.products);
@@ -104,6 +128,8 @@ const ProductManagement: React.FC = () => {
     stock: 0,
     rating: { rate: 0, count: 0 },
   });
+  const navigate = useNavigate();
+  const { isVisible, scrollToTop } = useScrollToTop();
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -130,8 +156,70 @@ const ProductManagement: React.FC = () => {
     dispatch(deleteProduct(productId));
   };
 
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
+  useEffect(() => {
+    const client = mqtt.connect(`${websocketUrl}`);
+
+    client.on('connect', () => {
+      client.subscribe('inventory-updates', (err) => {
+        if (err) {
+          console.error('Subscription error for inventory/updates:', err);
+        }
+      });
+
+      client.subscribe('order/update', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('product/new', (err) => {
+        if (err) {
+          console.error('Subscription error for product/new:', err);
+        }
+      });
+      client.subscribe('product/update', (err) => {
+        if (err) {
+          console.error('Subscription error for product/update:', err);
+        }
+      });
+      client.subscribe('product/delete', (err) => {
+        console.error('Subscription error for product/delete:', err);
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      try {
+        const data = JSON.parse(message.toString());
+
+        if (topic === 'inventory-updates') {
+          dispatch(updateInventoryInProduct(data));
+        }
+        if (topic === 'product/new') {
+          dispatch(updateInventoryInProduct(data));
+        }
+        if (topic === 'product/update') {
+          dispatch(updateProductInUserManagement(data));
+        }
+        if (topic === 'product/delete') {
+          dispatch(deleteProductInProductManagement(data.productId));
+        }
+
+        if (topic === 'sales-updates') {
+          dispatch(updateSales(data));
+        }
+      } catch (error) {
+        console.error('Failed to parse message:', error);
+      }
+    });
+
+    return () => {
+      client.end();
+    };
+  }, [dispatch, websocketUrl]);
+
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>Product Management</Title>
       <table>
         <thead>
@@ -226,6 +314,7 @@ const ProductManagement: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </Container>
   );
 };

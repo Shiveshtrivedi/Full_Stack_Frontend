@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { AppDispatch, RootState } from '../redux/store';
 import { useNavigate } from 'react-router-dom';
 import { IOrder } from '../utils/type/types';
-import { updateStock } from '../redux/slices/inventorySlice';
 import { updateOrder } from '../redux/slices/orderSlice';
 
 const loadRazorpayScript = (src: string) => {
@@ -128,7 +127,7 @@ const PaymentPage: React.FC = () => {
       currency: 'INR',
       name: 'ITT',
       order_id: orderId,
-      description: 'Test Transaction',
+      description: 'Welcome to e-comm payment portal',
       handler: async (response: any) => {
         const paymentId = response.razorpay_payment_id;
 
@@ -146,14 +145,6 @@ const PaymentPage: React.FC = () => {
 
           try {
             await dispatch(updateOrder({ orderId, orderData }));
-
-            const productsToUpdate = latestOrder.orderDetails.map((item) => ({
-              productId: item.productId,
-              quantitySold: item.quantity,
-            }));
-
-            await dispatch(updateStock({ products: productsToUpdate }));
-
             navigate('/checkout/success');
           } catch (error) {
             console.error('Error updating order or inventory:', error);

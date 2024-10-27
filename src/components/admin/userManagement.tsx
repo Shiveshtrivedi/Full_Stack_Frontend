@@ -1,13 +1,21 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import React, { useEffect, useState } from 'react';
 import {
   fetchUsers,
   deleteUser,
   updateUser,
-} from '../redux/slices/userManagementSlice';
-import { IUserForAdmin } from '../utils/type/types';
+  updateUserInUserManagement,
+  deleteUserInUserManagement,
+  addUserInUserManagement,
+} from '../../redux/slices/userManagementSlice';
+import { IUserForAdmin } from '../../utils/type/types';
 import styled from 'styled-components';
+import { IoArrowBackOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import useScrollToTop from '../../hooks/useScrollToTop';
+import ScrollToTopButton from '../ui/scrollButton';
+import mqtt from 'mqtt';
 
 const Container = styled.div`
   max-width: 900px;
@@ -121,10 +129,26 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+const GoBackButton = styled(IoArrowBackOutline)`
+  font-size: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 7px;
+
+  &:hover {
+    border-radius: 50%;
+    background-color: #cbd3da;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
+
 const UserManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const users = useSelector((state: RootState) => state.userManagement.users);
   const currentUserId = useSelector((state: RootState) => state.auth.user.id);
+  const { isVisible, scrollToTop } = useScrollToTop(300);
   const loading = useSelector(
     (state: RootState) => state.userManagement.loading
   );
@@ -138,6 +162,7 @@ const UserManagement: React.FC = () => {
     profileImage: '',
     isAdmin: false,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -181,8 +206,70 @@ const UserManagement: React.FC = () => {
     dispatch(deleteUser(userId));
   };
 
+  const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
+
+  useEffect(() => {
+    const client = mqtt.connect(`${websocketUrl}`);
+
+    client.on('connect', () => {
+      client.subscribe('inventory-updates', (err) => {
+        if (err) {
+          console.error('Subscription error for inventory/updates:', err);
+        }
+      });
+
+      client.subscribe('order/update', (err) => {
+        if (err) {
+          console.error('Subscription error for order/update:', err);
+        }
+      });
+      client.subscribe('product/new', (err) => {
+        if (err) {
+          console.error('Subscription error for product/new:', err);
+        }
+      });
+      client.subscribe('user/new', (err) => {
+        if (err) {
+          console.error('Subscription error for user/new :', err);
+        }
+      });
+      client.subscribe('user/delete', (err) => {
+        if (err) {
+          console.error('Subscription error for user/delete :', err);
+        }
+      });
+      client.subscribe('user/update', (err) => {
+        if (err) {
+          console.error('Subscription error for user/update :', err);
+        }
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        if (topic === 'user/new') {
+          dispatch(addUserInUserManagement(data));
+        }
+        if (topic === 'user/delete') {
+          dispatch(deleteUserInUserManagement(data.userId));
+        }
+        if (topic === 'user/update') {
+          dispatch(updateUserInUserManagement(data));
+        }
+      } catch (error) {
+        console.error('Failed to parse message:', error);
+      }
+    });
+
+    return () => {
+      client.end();
+    };
+  }, [dispatch, websocketUrl]);
+
   return (
     <Container>
+      <GoBackButton onClick={() => navigate(-1)} />
       <Title>User Management</Title>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
@@ -270,6 +357,7 @@ const UserManagement: React.FC = () => {
           )}
         </tbody>
       </StyledTable>
+      <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </Container>
   );
 };

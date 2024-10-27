@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { logout } from '../redux/slices/authSlice';
-import Loading from '../components/loading';
+import Loading from '../components/ui/loading';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { getAddresses, updateAddress } from '../redux/slices/addressSlice';
 import { updateUser } from '../redux/slices/userManagementSlice';
 import { IAddress, IUserForAdmin } from '../utils/type/types';
+import GoBackButton from '../components/navigation/goBackButton';
 
 const Container = styled.div`
   max-width: 800px;
@@ -189,6 +190,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton />
       <Heading>Profile Page</Heading>
       {user && (
         <ProfileInfo>

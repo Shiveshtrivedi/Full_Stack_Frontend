@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import Loading from '../components/loading';
-import ReviewList from '../components/reviewList';
-import ReviewForm from '../components/reviewForm';
+import Loading from '../components/ui/loading';
+import ReviewList from '../components/product/reviewList';
+import ReviewForm from '../components/product/reviewForm';
 import { fetchReviews } from '../redux/slices/userReviewSlice';
 import { AppDispatch, RootState } from '../redux/store';
-import { fetchProducts } from '../redux/slices/productSlice';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
-import Star from '../components/star';
+import Star from '../components/ui/star';
 import { useAddToCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { IProduct } from '../utils/type/types';
 import { getCart } from '../redux/slices/cartSlice';
+import GoBackButton from '../components/navigation/goBackButton';
+import { fetchProducts } from '../redux/slices/productSlice';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -120,20 +121,23 @@ const ProductPage: React.FC = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <Container>
-      <Zoom>
-        <Image src={product.image} alt={product.productName} />
-      </Zoom>
-      <Title>{product.productName}</Title>
-      <Star reviews={averageRating} />
-      <Price>{product.price.toFixed(2)} &#8377;</Price>
-      <Description>{product.productDescription}</Description>
-      <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
-      {product.productId && (
-        <ReviewForm productId={product.productId} userId={userId} />
-      )}
-      {product.productId && <ReviewList productId={product.productId} />}
-    </Container>
+    <div>
+      <GoBackButton />
+      <Container>
+        <Zoom>
+          <Image src={product.image} alt={product.productName} />
+        </Zoom>
+        <Title>{product.productName}</Title>
+        <Star reviews={averageRating} />
+        <Price>{product.price.toFixed(2)} &#8377;</Price>
+        <Description>{product.productDescription}</Description>
+        <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+        {product.productId && (
+          <ReviewForm productId={product.productId} userId={userId} />
+        )}
+        {product.productId && <ReviewList productId={product.productId} />}
+      </Container>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ISale } from '../../utils/type/types';
 import { api } from './authSlice';
 
@@ -40,14 +40,20 @@ const salesSlice = createSlice({
       .addCase(fetchSalesReport.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchSalesReport.fulfilled, (state, action) => {
-        state.sales = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchSalesReport.rejected, (state, action) => {
-        state.error = action.payload as string;
-        state.loading = false;
-      });
+      .addCase(
+        fetchSalesReport.fulfilled,
+        (state, action: PayloadAction<ISale[]>) => {
+          state.sales = action.payload;
+          state.loading = false;
+        }
+      )
+      .addCase(
+        fetchSalesReport.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload as string;
+          state.loading = false;
+        }
+      );
   },
 });
 

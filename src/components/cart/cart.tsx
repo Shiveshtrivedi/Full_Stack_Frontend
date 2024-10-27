@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import {
   updateCartItem,
   clearCart,
   getCart,
   setCartItem,
-} from '../redux/slices/cartSlice';
+} from '../../redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { ICreateOrderRequest } from '../utils/type/types';
-import { createOrder } from '../redux/slices/orderSlice';
+import { ICreateOrderRequest } from '../../utils/type/types';
+import { createOrder } from '../../redux/slices/orderSlice';
 
 const CartContainer = styled.div`
   padding: 20px;
@@ -251,7 +251,6 @@ const Cart: React.FC = () => {
         try {
           setIsLoading(true);
           await dispatch(getCart({ userId })).unwrap();
-          toast.success('Cart loaded successfully!');
         } catch (error: any) {
           toast.error('Failed to load cart items.', error);
         } finally {
@@ -281,7 +280,6 @@ const Cart: React.FC = () => {
       };
       await dispatch(createOrder(newOrder)).unwrap();
       dispatch(clearCart({ userId }));
-      toast.success('Checkout successful!');
       navigate('/checkout');
     } catch (error: any) {
       toast.error('Checkout failed. Please try again.', error);
@@ -334,17 +332,19 @@ const Cart: React.FC = () => {
                     <ItemPrice>{item.price.toFixed(2)} &#8377;</ItemPrice>
                   </ItemDetails>
                   <QuantityButton
-                    onClick={() =>
-                      handleUpdateQuantity(item, (item.quantity ?? 0) - 1)
-                    }
+                    onClick={() => {
+                      handleUpdateQuantity(item, (item.quantity ?? 0) - 1);
+                      toast.error('Item deleted to cart');
+                    }}
                   >
                     -
                   </QuantityButton>
                   <QuantitySpan>{item.quantity}</QuantitySpan>
                   <QuantityButton
-                    onClick={() =>
-                      handleUpdateQuantity(item, (item.quantity ?? 0) + 1)
-                    }
+                    onClick={() => {
+                      handleUpdateQuantity(item, (item.quantity ?? 0) + 1);
+                      toast.success('Item added to cart');
+                    }}
                   >
                     +
                   </QuantityButton>
@@ -356,7 +356,6 @@ const Cart: React.FC = () => {
           <ClearCartButton
             onClick={() => {
               dispatch(clearCart({ userId }));
-              toast.error('Cart cleared');
             }}
           >
             Clear Cart

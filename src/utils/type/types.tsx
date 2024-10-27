@@ -21,7 +21,7 @@ export interface IUserForAdmin {
 export interface IUserManagementState {
   users: IUserForAdmin[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface IAuthState {
@@ -38,6 +38,13 @@ export interface IAuthResponse {
   user: IUser;
 }
 
+export interface ISignupResponse {
+  userName: string;
+  email: string;
+  isAdmin: boolean;
+  token?: string;
+}
+
 export interface ICredentials {
   name?: string;
   email: string;
@@ -51,7 +58,7 @@ export interface ICartItem {
   items: Array<{
     productId: number;
     productName: string;
-    quantity: number | undefined;
+    quantity: number;
     imageUrl: string;
     price: number;
   }>;
@@ -88,6 +95,8 @@ export interface IProductWithoutId {
   productDescription?: string;
   category: string;
   stock: number;
+  costPrice: number;
+  sellingPrice: number;
   rating?: {
     rate: number;
     count: number;
@@ -257,7 +266,7 @@ export interface IAddress {
 export interface IAddressState {
   address: IAddress[] | null;
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface ISale {
@@ -344,7 +353,7 @@ export interface DashboardState {
   orders: IOrder[];
   revenue: Revenue[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface DashboardData {
@@ -365,7 +374,7 @@ export interface InventoryItem {
 export interface InventoryState {
   items: InventoryItem[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
 export interface UpdateStockItem {
@@ -375,4 +384,21 @@ export interface UpdateStockItem {
 
 export interface UpdateStockRequest {
   products: UpdateStockItem[];
+}
+
+export interface ISearchBarProps {
+  categoryFilter: TCategoryFilter;
+  priceFilter: TPriceFilter;
+  ratingFilter: TRatingFilter;
+  handleCategoryFilterChange: (category: TCategoryFilter) => void;
+  handlePriceFilterChange: (filter: TPriceFilter) => void;
+  handleRatingFilterChange: (filter: TRatingFilter) => void;
+  handleResetFilters: () => void;
+  viewMode: 'grid' | 'list';
+  handleToggleViewMode: () => void;
+}
+
+export interface IScrollButtonProps {
+  visible: boolean;
+  onClick: () => void;
 }

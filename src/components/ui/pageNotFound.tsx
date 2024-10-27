@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
-import { AppDispatch, RootState } from '../redux/store';
-import { getCart } from '../redux/slices/cartSlice';
+import { AppDispatch, RootState } from '../../redux/store';
+import { getCart } from '../../redux/slices/cartSlice';
 
 const bounce = keyframes`
   0%, 20%, 50%, 80%, 100% {

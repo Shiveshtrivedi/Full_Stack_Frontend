@@ -14,6 +14,7 @@ export const useProductFilter = () => {
   const query = new URLSearchParams(location.search);
   const category = query.get('category');
   const products = useSelector((state: RootState) => state.products.products);
+
   const averageRatings = useSelector(
     (state: RootState) => state.reviews.averageRatings
   );

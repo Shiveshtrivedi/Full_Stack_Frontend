@@ -65,8 +65,6 @@ export const updateCartItem = createAsyncThunk<
       items
     );
 
-    toast.success('Items updated in cart');
-
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -86,7 +84,6 @@ export const clearCart = createAsyncThunk<
 >('cart/clearCart', async ({ userId }, { rejectWithValue }) => {
   try {
     await api.delete(`${API_URL}/cart/clear/${userId}/deletItemsInCart`);
-    toast.success('Cart cleared successfully');
   } catch (error) {
     const axiosError = error as AxiosError;
     toast.error(
@@ -171,35 +168,45 @@ const cartSlice = createSlice({
           toast.error('Failed to add product to cart ');
         }
       )
-      .addCase(updateCartItem.fulfilled, (state, action) => {
-        const updatedCart: ICartItem[] = action.payload;
+      .addCase(
+        updateCartItem.fulfilled,
+        (state, action: PayloadAction<ICartItem[]>) => {
+          const updatedCart: ICartItem[] = action.payload;
 
-        if (!updatedCart || updatedCart.length === 0) return;
+          if (!updatedCart || updatedCart.length === 0) return;
 
-        state.items = updatedCart;
+          state.items = updatedCart;
 
-        state.totalAmount = updatedCart.reduce(
-          (total, item) => total + item.totalPrice,
-          0
-        );
+          state.totalAmount = updatedCart.reduce(
+            (total, item) => total + item.totalPrice,
+            0
+          );
 
-        localStorage.setItem(
-          `cart_${state.userId}`,
-          JSON.stringify(state.items)
-        );
-      })
-      .addCase(updateCartItem.rejected, (state, action) => {
-        console.error(action.payload);
-      })
+          localStorage.setItem(
+            `cart_${state.userId}`,
+            JSON.stringify(state.items)
+          );
+        }
+      )
+      .addCase(
+        updateCartItem.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          console.error(action.payload);
+        }
+      )
       .addCase(clearCart.fulfilled, (state) => {
         state.items = [];
         state.totalAmount = 0;
         localStorage.removeItem(`cart_${state.userId}`);
         localStorage.setItem('totalAmount', '0');
+        toast.error('Cart cleared');
       })
-      .addCase(clearCart.rejected, (state, action) => {
-        console.error(action.payload);
-      });
+      .addCase(
+        clearCart.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          console.error(action.payload);
+        }
+      );
   },
 });
 

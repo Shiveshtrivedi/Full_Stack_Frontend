@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { postAddress } from '../redux/slices/addressSlice';
-import { clearCart } from '../redux/slices/cartSlice';
 
 const CheckoutContainer = styled.div`
   display: flex;
@@ -98,8 +97,6 @@ const CheckoutPage: React.FC = () => {
     try {
       const resultAction = await dispatch(postAddress(addressDetails));
       if (postAddress.fulfilled.match(resultAction)) {
-        dispatch(clearCart({ userId }));
-
         navigate('/checkout/payment');
       } else {
         console.error('Failed to submit address:', resultAction.error.message);

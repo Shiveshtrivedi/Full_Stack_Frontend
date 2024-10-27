@@ -4,8 +4,10 @@ import {
   IProduct,
   IProductState,
   IProductWithoutId,
+  IUpdateProductStockPayload,
 } from '../../utils/type/types';
 import { api } from './authSlice';
+import { toast } from 'react-toastify';
 
 const initialState: IProductState = {
   products: [],
@@ -127,6 +129,47 @@ const productSlice = createSlice({
     resetFilter(state) {
       state.filterProducts = [...state.products];
     },
+    updateInventoryInProduct: (
+      state,
+      action: PayloadAction<IUpdateProductStockPayload>
+    ) => {
+      const updatedProducts = state.products.map((product) =>
+        product.productId === action.payload.ProductId
+          ? { ...product, ...action.payload }
+          : product
+      );
+
+      console.log('updated products', JSON.stringify(updatedProducts));
+      state.products = updatedProducts;
+    },
+    deleteProductInProductManagement: (state, action) => {
+      state.products = state.products.filter(
+        (product) => product.productId !== action.payload
+      );
+    },
+    updateProductInUserManagement: (state, action) => {
+      const productIndex = state.products.findIndex(
+        (product) => product.productId === action.payload.productId
+      );
+
+      if (productIndex !== -1) {
+        const productToUpdate = state.products[productIndex];
+
+        const updatedProduct = {
+          ...productToUpdate,
+          productName:
+            action.payload.productName ?? productToUpdate.productName,
+          productDescription:
+            action.payload.productDescription ??
+            productToUpdate.productDescription,
+          price: action.payload.price ?? productToUpdate.price,
+          stock: action.payload.stock ?? productToUpdate.stock,
+          category: action.payload.category ?? productToUpdate.category,
+        };
+
+        state.products[productIndex] = updatedProduct;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -149,10 +192,12 @@ const productSlice = createSlice({
         addProduct.fulfilled,
         (state, action: PayloadAction<IProduct>) => {
           state.products.push(action.payload);
+          toast.success('Product added successfully');
         }
       )
       .addCase(addProduct.rejected, (state, action) => {
         state.error = action.error.message ?? 'Failed to add product';
+        toast.error('Error occurred while adding product');
       })
       .addCase(
         deleteProduct.rejected,
@@ -164,6 +209,7 @@ const productSlice = createSlice({
         state.products = state.products.filter(
           (product) => product.productId !== action.meta.arg
         );
+        toast.error('Item deleted successfully');
       })
       .addCase(
         fetchProductsByCategory.fulfilled,
@@ -223,7 +269,13 @@ const productSlice = createSlice({
   },
 });
 
-export const { addProductToHistory, removeProductFromHistory, resetFilter } =
-  productSlice.actions;
+export const {
+  addProductToHistory,
+  removeProductFromHistory,
+  resetFilter,
+  updateInventoryInProduct,
+  updateProductInUserManagement,
+  deleteProductInProductManagement,
+} = productSlice.actions;
 
 export default productSlice.reducer;

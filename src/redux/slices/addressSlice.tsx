@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { IAddress, IAddressState } from '../../utils/type/types';
 import { api } from './authSlice';
 
 const initialState: IAddressState = {
   address: null,
   loading: false,
-  error: null,
+  error: '',
 };
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
@@ -19,9 +19,9 @@ export const getAddresses = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response.data.message || 'Failed to fetch addresses'
-      );
+      const rejectValue =
+        error.response.data.message || 'Failed to fetch addresses';
+      return rejectWithValue(rejectValue);
     }
   }
 );
@@ -67,14 +67,14 @@ const addressSlice = createSlice({
     resetAddress(state) {
       state.address = null;
       state.loading = false;
-      state.error = null;
+      state.error = '';
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(postAddress.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(postAddress.fulfilled, (state, action) => {
         state.loading = false;
@@ -86,19 +86,22 @@ const addressSlice = createSlice({
       })
       .addCase(getAddresses.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
-      .addCase(getAddresses.fulfilled, (state, action) => {
-        state.loading = false;
-        state.address = action.payload;
-      })
+      .addCase(
+        getAddresses.fulfilled,
+        (state, action: PayloadAction<IAddress[]>) => {
+          state.loading = false;
+          state.address = action.payload;
+        }
+      )
       .addCase(getAddresses.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (action.payload as string) ?? 'Failed to fetch addresses';
       })
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateAddress.fulfilled, (state, action) => {
         state.loading = false;

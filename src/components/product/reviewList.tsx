@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchReviews,
   selectReviewsForProduct,
-} from '../redux/slices/userReviewSlice';
-import { AppDispatch, RootState } from '../redux/store';
+} from '../../redux/slices/userReviewSlice';
+import { AppDispatch, RootState } from '../../redux/store';
 import styled from 'styled-components';
 
 const Container = styled.div`
