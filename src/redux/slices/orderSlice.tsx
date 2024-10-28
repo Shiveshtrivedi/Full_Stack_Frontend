@@ -5,7 +5,6 @@ import {
   IOrderState,
   IUpdateOrderArgs,
 } from '../../utils/type/types';
-import { getOrdersFromCookies } from '../../utils/cookie/cookieUtils';
 import { api } from './authSlice';
 
 const ORDER_STORAGE_KEY = 'orders';
@@ -81,9 +80,8 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    initializeOrders(state, action: PayloadAction<string>) {
-      const orders1 = getOrdersFromCookies(action.payload);
-      state.orders = orders1 || [];
+    initializeOrders(state) {
+      state.orders = getOrdersFromLocalStorage() || [];
       saveOrdersToLocalStorage(state.orders);
     },
   },

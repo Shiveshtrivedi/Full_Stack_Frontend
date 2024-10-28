@@ -36,7 +36,6 @@ const CharContainer = styled.div`
 
 const SaleLineChart = () => {
   const sales = useSelector((root: RootState) => root.dashBoard.sales);
-  console.log('sales ', sales);
 
   const [labels] = useState(() =>
     sales.map((sale) => new Date(sale.saleDate).toLocaleDateString())
@@ -47,7 +46,7 @@ const SaleLineChart = () => {
   const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
 
   useEffect(() => {
-    const client = mqtt.connect(`${websocketUrl}`);
+    const client = mqtt.connect('ws://localhost:9001');
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {
@@ -80,7 +79,6 @@ const SaleLineChart = () => {
         }
 
         if (topic === 'product/new') {
-          console.log('datain dash', data);
           dispatch(updateProductList(data));
         }
       } catch (error) {

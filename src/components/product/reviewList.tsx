@@ -92,7 +92,6 @@ const ReviewList = ({ productId }: { productId: number }) => {
               <UserName>user:{review.userName}</UserName>
               <Comment>{review.comment}</Comment>
               <Timestamp>
-                {/* {new Date(review.timestamp).toLocaleString()} */}
               </Timestamp>
             </ReviewItem>
           ))}

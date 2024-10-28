@@ -158,7 +158,7 @@ const ProductManagement: React.FC = () => {
 
   const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
   useEffect(() => {
-    const client = mqtt.connect(`${websocketUrl}`);
+    const client = mqtt.connect('ws://localhost:9001');
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {

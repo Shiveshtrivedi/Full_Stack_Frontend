@@ -149,7 +149,7 @@ const AdminDashboard = () => {
   const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
 
   useEffect(() => {
-    const client = mqtt.connect(`${websocketUrl}`);
+    const client = mqtt.connect('ws://localhost:9001');
 
     client.on('connect', () => {
       client.subscribe('inventory-updates', (err) => {
@@ -210,11 +210,9 @@ const AdminDashboard = () => {
         }
 
         if (topic === 'sales-updates') {
-          console.log('data in dashboard ', data);
           dispatch(updateSales(data));
         }
         if (topic === 'user/new') {
-          console.log('data ', data);
           dispatch(addUserInUserManagement(data));
         }
         if (topic === 'user/delete') {

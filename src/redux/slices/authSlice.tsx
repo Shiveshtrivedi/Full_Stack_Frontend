@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { removeCookie } from '../../utils/cookie/cookieUtils';
 import {
   IUser,
   IAuthState,
@@ -110,7 +109,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      removeCookie('token');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('tokenExpiration');
