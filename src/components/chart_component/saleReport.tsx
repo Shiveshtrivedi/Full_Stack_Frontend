@@ -96,7 +96,6 @@ const SaleReport: React.FC = () => {
     (root: RootState) => root.saleReport
   );
 
-  console.log('sales data ', sales);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

@@ -71,27 +71,14 @@ const dashboardSlice = createSlice({
         return;
       }
 
-      const { saleDate, totalProductsSold } = action.payload;
+      const { totalProductsSold } = action.payload;
       const actionDate = action.payload.saleDate.split('T')[0];
-      console.log('sale date is ', saleDate);
-      console.log('saledata', JSON.stringify(state.sales));
 
       const existingSaleIndex = state.sales.findIndex(
         (sale) => sale.saleDate === `${actionDate}T00:00:00`
       );
-      console.log('existing date', existingSaleIndex);
-
-      console.log('existing saledate', state.sales[existingSaleIndex].saleDate);
 
       if (existingSaleIndex !== -1) {
-        console.log(
-          'Total products sold before update: ',
-          state.sales[existingSaleIndex].totalProductsSold,
-          'Index: ',
-          existingSaleIndex,
-          'product sold',
-          totalProductsSold
-        );
         state.sales[existingSaleIndex].totalProductsSold =
           state.sales[existingSaleIndex].totalProductsSold + totalProductsSold;
       } else {

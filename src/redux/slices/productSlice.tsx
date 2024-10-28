@@ -4,7 +4,6 @@ import {
   IProduct,
   IProductState,
   IProductWithoutId,
-  IUpdateProductStockPayload,
 } from '../../utils/type/types';
 import { api } from './authSlice';
 import { toast } from 'react-toastify';
@@ -129,19 +128,21 @@ const productSlice = createSlice({
     resetFilter(state) {
       state.filterProducts = [...state.products];
     },
-    updateInventoryInProduct: (
-      state,
-      action: PayloadAction<IUpdateProductStockPayload>
-    ) => {
-      const updatedProducts = state.products.map((product) =>
-        product.productId === action.payload.ProductId
-          ? { ...product, ...action.payload }
-          : product
+    updateInventoryInProduct: (state, action) => {
+      const existingProductIndex = state.products.findIndex(
+        (product) => product.productId === action.payload.ProductId
       );
 
-      console.log('updated products', JSON.stringify(updatedProducts));
-      state.products = updatedProducts;
+      if (existingProductIndex !== -1) {
+        state.products[existingProductIndex] = {
+          ...state.products[existingProductIndex],
+          ...action.payload,
+        };
+      } else {
+        state.products.push(action.payload);
+      }
     },
+
     deleteProductInProductManagement: (state, action) => {
       state.products = state.products.filter(
         (product) => product.productId !== action.payload

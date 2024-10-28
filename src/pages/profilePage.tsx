@@ -237,14 +237,6 @@ const ProfilePage: React.FC = () => {
             />
             <Input
               type="text"
-              value={address.phoneNumber}
-              onChange={(e) =>
-                setAddress({ ...address, phoneNumber: +e.target.value })
-              }
-              placeholder="Update phone number"
-            />
-            <Input
-              type="text"
               value={address.city}
               onChange={(e) => setAddress({ ...address, city: e.target.value })}
               placeholder="Update city"
