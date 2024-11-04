@@ -217,6 +217,8 @@ const WishlistPage: React.FC = () => {
           </WishlistItem>
         ))
       )}
+      <button>CheckOut</button>
+
       <ScrollToTopButton visible={isVisible} onClick={scrollToTop} />
     </WishlistContainer>
   );

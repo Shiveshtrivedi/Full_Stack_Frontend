@@ -17,11 +17,10 @@ import {
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
-  background-color: fefefe;
+  background-color: #fefefe;
   border-radius: 50px;
   padding: 10px 20px;
-  box-shadow: 0 4px 8px #00000020
-  width: 100%;
+  box-shadow: 0 4px 8px #00000020;
   max-width: 1000px;
   margin: 0 auto;
   flex-wrap: wrap;

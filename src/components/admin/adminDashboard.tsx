@@ -133,6 +133,11 @@ const GoBackButton = styled(IoArrowBackOutline)`
   }
 `;
 
+export interface IRevenueUpdateDetail {
+  saleDate: string; // The date of the sale in ISO format
+  totalAmount: number; // The total amount of the sale
+}
+
 const AdminDashboard = () => {
   const { users, products, sales, orders, loading, error } = useSelector(
     (state: RootState) => state.dashBoard
