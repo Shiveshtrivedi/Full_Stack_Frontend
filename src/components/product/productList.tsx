@@ -391,7 +391,7 @@ const ProductList: React.FC = () => {
                     style={{
                       color: '#fefefe',
                       padding: '5px',
-                      fontWeight: 'bold',                     
+                      fontWeight: 'bold',
                     }}
                   >
                     G
