@@ -386,11 +386,20 @@ const ProductList: React.FC = () => {
                     Only {product.stock}! product remaining
                   </LowStockAlert>
                 )}
+                {product.stock > 10 && (
+                  <div
+                    style={{
+                      color: '#fefefe',
+                      padding: '5px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    G
+                  </div>
+                )}
                 <TopRatedText
                   isVisible={averageRatings[product.productId] === 5}
-                >
-                  {averageRatings[product.productId] === 5 ? 'Top Rated' : ''}
-                </TopRatedText>
+                ></TopRatedText>
                 <ImageHeartContainer>
                   <Link
                     to={`/products/${product.productId}`}

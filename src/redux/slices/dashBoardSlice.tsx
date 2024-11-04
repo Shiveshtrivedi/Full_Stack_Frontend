@@ -9,6 +9,7 @@ import {
   User,
 } from '../../utils/type/types';
 import { api } from './authSlice';
+import { IRevenueUpdateDetail } from '../../components/admin/adminDashboard';
 
 const API_URL = process.env.REACT_APP_USER_API_URL ?? '';
 
@@ -71,7 +72,11 @@ const dashboardSlice = createSlice({
         return;
       }
 
-      const { totalProductsSold } = action.payload;
+      const { totalProductsSold, saleDate } = action.payload;
+      if (!saleDate) {
+        console.error('saleDate is undefined or null');
+        return;
+      }
       const actionDate = action.payload.saleDate.split('T')[0];
 
       const existingSaleIndex = state.sales.findIndex(
@@ -88,7 +93,7 @@ const dashboardSlice = createSlice({
     updateProductList: (state, action: PayloadAction<Product>) => {
       state.products.push(action.payload);
     },
-    updateRevenue: (state, action) => {
+    updateRevenue: (state, action: PayloadAction<IRevenueUpdateDetail>) => {
       const actionDate = action.payload.saleDate.split('T')[0];
       const existingRevenueIndex = state.revenue.findIndex(
         (revenue) => revenue.date === `${actionDate}T00:00:00`

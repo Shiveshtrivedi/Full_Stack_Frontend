@@ -91,8 +91,7 @@ const ReviewList = ({ productId }: { productId: number }) => {
               <Rating>{review.rating} / 5</Rating>
               <UserName>user:{review.userName}</UserName>
               <Comment>{review.comment}</Comment>
-              <Timestamp>
-              </Timestamp>
+              <Timestamp></Timestamp>
             </ReviewItem>
           ))}
         </ReviewListContainer>

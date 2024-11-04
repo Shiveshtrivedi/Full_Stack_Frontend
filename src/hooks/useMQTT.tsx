@@ -34,8 +34,10 @@ export const useMQTT = (topics: TopicHandler[]) => {
       const handler = topics.find((t) => t.topic === topic);
       if (handler) {
         try {
-          handler.onMessage(message.toString());
-          console.log('topic ', topic);
+          const data = JSON.parse(message.toString());
+          if (data && typeof data === 'object')
+            handler.onMessage(message.toString());
+          console.log('topic ', topic, 'data', data);
         } catch (error) {
           console.error('Failed to parse message:', error);
         }

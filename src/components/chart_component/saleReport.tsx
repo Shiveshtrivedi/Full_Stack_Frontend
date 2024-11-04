@@ -96,7 +96,6 @@ const SaleReport: React.FC = () => {
     (root: RootState) => root.saleReport
   );
 
-
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const navigate = useNavigate();

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { RootState } from '../../redux/store';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { BsCart } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { logout } from '../../redux/slices/authSlice';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -198,11 +199,21 @@ const ImageLogo = styled.div`
   }
 `;
 
+const LogoutButton = styled.div`
+  cursor: pointer;
+  padding: 10px 15px;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
 const Header: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
 
   const items = useSelector((state: RootState) => state.cart.items);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -211,6 +222,10 @@ const Header: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -233,9 +248,7 @@ const Header: React.FC = () => {
             {isAdmin && <StyledLink to="/addProduct">Add Product</StyledLink>}
             <StyledLink to="/contact">Contact</StyledLink>
             <StyledLink to="/about">About</StyledLink>
-            {isAdmin && (
-              <StyledLink to="/adminLayout">Admin Dashboard</StyledLink>
-            )}
+            {isAdmin && <StyledLink to="/adminLayout">Dashboard</StyledLink>}
             <form onSubmit={handleSearch}></form>
             <StyledLink to="/cart">
               <CartContainer>
@@ -266,6 +279,7 @@ const Header: React.FC = () => {
                 {isAdmin && (
                   <DropdownItem to="/adminHistory">History</DropdownItem>
                 )}
+                <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
               </DropdownMenu>
             </DropdownContainerHover>
           </>
