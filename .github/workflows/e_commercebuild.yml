@@ -3,10 +3,10 @@ name: Build E-commerce App
 on:
   push:
     branches:
-      - frontend
-  pull_request:
-    branches:
-      - main
+      - frontend_updated
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   build:
@@ -46,3 +46,6 @@ jobs:
 
       - name: Install Husky
         run: npx husky install
+
+      - name: Run Project
+        run: npm start
