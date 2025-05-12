@@ -46,3 +46,6 @@ jobs:
 
       - name: Install Husky
         run: npx husky install
+
+      - name: Run Project
+        run: npm start
