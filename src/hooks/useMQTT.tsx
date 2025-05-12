@@ -18,7 +18,7 @@ export const useMQTT = (topics: TopicHandler[]) => {
     });
 
     client.on('connect', () => {
-      console.log('Connected to MQTT broker');
+      console.log('Connected to MQTT brokers');
       topics.forEach(({ topic }) => {
         client.subscribe(topic, (err) => {
           if (err) {
