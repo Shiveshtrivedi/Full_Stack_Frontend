@@ -3,10 +3,10 @@ name: Build E-commerce App
 on:
   push:
     branches:
-      - frontend_update
-  pull_request:
-    branches:
-      - main
+      - frontend_updated
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   build:
